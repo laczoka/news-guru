@@ -9,7 +9,7 @@ $page_viewer = get_loggedin_user();
 $size = 100.0;
 $error1 = 0.005;    // rounding error term
 $error2 = 0.00005;  // rounding error term
-$factor = 20000.0;    // sensitivity factor
+$factor = 100.0;    // sensitivity factor
 
 $option = $t->option;
 
@@ -33,7 +33,7 @@ $option = $t->option;
     <?php
 
     // Get the integral of the weighted price
-    $ev = $size * (1/(1-$t->price)) ;
+    $ev = $size * (1/$t->price) ;
 
     // How far approximately will we move?
     if ($option == 'option1') {
@@ -44,25 +44,44 @@ $option = $t->option;
 
     // Get the approximate price difference
     if ($option == 'option1') {
-        $diff = $stretch/$size * ($m->value1 / $factor);
-    } else {
         $diff = $stretch/$size * ($m->value2 / $factor);
+    } else {
+        $diff = $stretch/$size * ($m->value1 / $factor);
     }
 
 
     // Get the approximate trade out value
     if ($option == 'option1') {
-        $fair = ($m->value1 - $diff/2.0)*$ev;
+        $fair = ($m->value1 - $diff/2.0 )*$ev;
     } else {
-        $fair = ($m->value2 + $diff/2.0)*$ev;
+        $fair = ($m->value2 + $diff/2.0 )*$ev;
     }
 
+    // 2nd approximation
+    if ($option == 'option1') {
+        $stretch =  $fair;
+    } else {
+        $stretch =  $fair;
+    }
 
+    $f = $stretch / ($size * $factor);
+    if ($option == 'option1') {
+        $diff = $m->value1 - (( $m->value1 - $f) / ( 1 - $f))  ;
+    } else {
+        $diff = $m->value2 + (( $m->value2 - $f) / ( 1 - $f))  ;
+    }
+
+    if ($option == 'option1') {
+        $fair = ($m->value1 - $diff/2.0 )*$ev;
+    } else {
+        $fair = ($m->value2 + $diff/2.0 )*$ev;
+    }
+    
     ?>
 
     <p><strong>EV:</strong> +$<?php echo round($ev, 20) ?></p>
     <p><strong>Stretch:</strong> +$<?php echo round($stretch, 20) ?></p>
-    <p><strong>Diff:</strong> +$<?php echo round($diff, 40) ?></p>
+    <p><strong>Diff:</strong> +<?php echo round($diff, 40) ?></p>
     <p><strong>Fair:</strong> +$<?php echo round($fair+$error1, 20) ?></p>
 
     <?php

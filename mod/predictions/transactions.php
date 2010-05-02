@@ -3,7 +3,7 @@ $START_AMOUNT = 1000;
 
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-$body = list_entities('object','transaction',0,10,false);
+$body = elgg_list_entities(array('type' => 'object', 'subtype' => 'transaction', 'owner_guids' => 0, 'limit' => 10, 'full_view' => TRUE, 'status' => 'open'));
 
 // Get categories, if they're installed
 global $CONFIG;

@@ -2,21 +2,19 @@
 // only logged in users can add predictions
 gatekeeper();
 
-system_message('Betting is not currently enabled, please check back in the next week.');
-forward('mod/predictions/index.php');
-
-
 // init
 $page_viewer = get_loggedin_user();
 $size = 100.0;
 $status = 'open';
-$factor = 20000.0;    // sensitivity factor
+$factor = 100.0;    // sensitivity factor
 
 // get the form input
 $m = get_entity(get_input('market'));
 $price = get_input('price');
 $option = get_input('option');
 
+system_message('Betting is not currently available.  It is expected ');
+forward('mod/predictions/index.php');
 
 // validation
 if ($page_viewer->opendollars < $size) {
@@ -56,20 +54,20 @@ $t->owner_guid = get_loggedin_userid();
 
 
 // adjust balance
-$page_viewer->opendollars = round($page_viewer->opendollars - $size, 2);
+$page_viewer->opendollars = round($page_viewer->opendollars - $size, 0);
 
 // Get the approximated market move
 if ($option == 'option1') {
-    $diff = $size / $factor; // one percent to home
+    $diff = (1.0 - $m->value1) / $factor; // one percent to home
 } else {
-    $diff = $size / $factor; // one percent to home
+    $diff = (1.0 - $m->value2) / $factor; // one percent to home
 }
 
 // Set transaction price as midpoint
 if ($option == 'option1') {
     $t->price = $m->value1 + $diff/2.0;
 } else {
-    $t->price = $m->value2 - $diff/2.0;
+    $t->price = $m->value2 + $diff/2.0;
 }
 
 // adjust market
@@ -77,8 +75,8 @@ if ($option == 'option1') {
     $m->value1 = $m->value1 +$diff;
     $m->value2 = $m->value2 -$diff;
 } else {
-    $m->value1 = $m->value1 -$diff;
-    $m->value2 = $m->value2 +$diff;
+    $m->value1 = $m->value1 +$diff;
+    $m->value2 = $m->value2 -$diff;
 }
 
 
