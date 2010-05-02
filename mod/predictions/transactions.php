@@ -3,7 +3,7 @@ $START_AMOUNT = 1000;
 
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-$body = list_entities('object','predictions',0,10,false);
+$body = list_entities('object','transaction',0,10,false);
 
 // Get categories, if they're installed
 global $CONFIG;
@@ -24,10 +24,10 @@ if (!isset($page_viewer->opendollars)) {
 }
 
 // Display them in the page
-$left  = '<br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
-$left .= '<br/>This is a <i><b>preview</b></i> of the upcomping prediction markets module.  Please bear with us while we build out the necessary features.</br><br/><a href="add.php">Add</a> a prediction market.';
+$cash = '<br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
+$left = $cash . '<br/>This is a <i><b>preview</b></i> of the upcomping prediction markets module.  Please bear with us while we build out the necessary features.</br><br/><a href="add.php">Add</a> a prediction market.';
 $left .= '<br/><br/>List <a href="transactions.php">transactions</a>';
-$body  = elgg_view_layout("two_column_left_sidebar", $left, $body);
+$body = elgg_view_layout("two_column_left_sidebar", $left, $body);
 
 page_draw("Predictions",$body);
 
