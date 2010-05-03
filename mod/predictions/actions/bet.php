@@ -13,8 +13,8 @@ $m = get_entity(get_input('market'));
 $price = get_input('price');
 $option = get_input('option');
 
-system_message('Betting is not currently available.  It is expected ');
-forward('mod/predictions/index.php');
+//system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
+//forward('mod/predictions/index.php');
 
 // validation
 if ($page_viewer->opendollars < $size) {
@@ -67,7 +67,7 @@ if ($option == 'option1') {
 if ($option == 'option1') {
     $t->price = $m->value1 + $diff/2.0;
 } else {
-    $t->price = $m->value2 + $diff/2.0;
+    $t->price = $m->value2 - $diff/2.0;
 }
 
 // adjust market
