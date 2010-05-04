@@ -15,7 +15,7 @@ $START_AMOUNT = 1000;
 $e = elgg_get_entities_from_metadata(array('type' => 'object', 'subtype' => 'transaction', metadata_name => 'status', metadata_value => 'open', 'full_view' => FALSE ));
 foreach ($e as $k => $t) {
     if ($page_viewer->guid != $t->owner_guid) {
-        unset($e[$k]);
+        //unset($e[$k]);
     }
 }
 $body = elgg_view_entity_list($e);

@@ -1,4 +1,12 @@
-<?php echo elgg_view_title($vars['entity']->title); ?>
+<?php echo elgg_view_title($vars['entity']->title); 
+
+global $CONFIG;
+include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
+
+gatekeeper();
+$page_viewer = get_loggedin_user();
+
+?>
 
 <div class="contentWrapper">
 
@@ -22,13 +30,32 @@
 
                 <?php echo elgg_view('input/securitytoken');
 
-                echo round(100*$vars['entity']->value1, 2)
+                echo round(100*$vars['entity']->value1, 0)
                         . '%</td><td><input style="margin: 0px" type="submit" value="Bet 100" />';
 
                 ?>
             </span>
         </form>
-    </td></tr>
+    </td>
+<?php if ($page_viewer->guid == 2) { ?>
+<td>
+<form action="<?php echo $vars['url']; ?>action/predictions/settle" method="post">
+        <span>
+
+            <input type="hidden" name="market"  value="<?php echo $vars['entity']->guid ?>" />
+            <input type="hidden" name="option"  value="option1" />
+
+            <?php echo elgg_view('input/securitytoken');
+
+            echo '<input style="margin: 0px" type="submit" value="settle" />';
+
+            ?>
+        </span>
+    </form>
+</td>
+<?php } ?>
+
+</tr>
 
 <?php
 
@@ -46,13 +73,32 @@ echo '<tr><td>' . $vars['entity']->option2 . '</td>';
 
             <?php echo elgg_view('input/securitytoken');
 
-            echo round(100*$vars['entity']->value2,2) 
+            echo round(100*$vars['entity']->value2-0.0000001,0)
                     . '%</td><td><input style="margin: 0px" type="submit" value="Bet 100" />';
 
             ?>
         </span>
     </form>
-</td></tr>
+</td>
+<?php if ($page_viewer->guid == 2) { ?>
+<td>
+<form action="<?php echo $vars['url']; ?>action/predictions/settle" method="post">
+        <span>
+
+            <input type="hidden" name="market"  value="<?php echo $vars['entity']->guid ?>" />
+            <input type="hidden" name="option"  value="option2" />
+
+            <?php echo elgg_view('input/securitytoken');
+
+            echo '<input style="margin: 0px" type="submit" value="settle" />';
+
+            ?>
+        </span>
+    </form>
+</td>
+<?php } ?>
+
+</tr>
 
 <?php
 
@@ -71,23 +117,9 @@ if (!empty($vars['entity']->settlement )) {
 ?>
 
 
-<?php if (isadminloggedin()) { ?>
 <br/>
-<form action="<?php echo $vars['url']; ?>action/predictions/settle" method="post">
-        <span>
 
-            <input type="hidden" name="market"  value="<?php echo $vars['entity']->guid ?>" />
-
-            <?php echo elgg_view('input/securitytoken');
-
-            echo '<input style="margin: 0px" type="submit" value="settle" />';
-
-            ?>
-        </span>
-    </form> 
-<?php } ?>
-
-<?php if (isadminloggedin()) { ?>
+<?php if ($page_viewer->guid == 2) { ?>
 <br/>
 <form action="<?php echo $vars['url']; ?>action/predictions/void" method="post">
         <span>

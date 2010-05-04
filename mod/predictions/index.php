@@ -4,17 +4,19 @@ $DAILY_AMOUNT = 20;
 
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-$body = list_entities('object','predictions',0,10,false);
+//$body = list_entities('object','predictions',0,10,false);
+$e = elgg_get_entities (array('type' => 'object', 'subtype' => 'predictions', limit => 0,
+    'offset' => 0, 'full_view' => FALSE));
+foreach ($e as $k => $p) {
+    if ($p->status != 'open') {
+        unset ($e[$k]);
+    }
+}
+$body = elgg_view_entity_list($e);
 
 // Get categories, if they're installed
 global $CONFIG;
 
-error_log('test');
-
-$area3 = elgg_view('blog/categorylist',array('baseurl' => $CONFIG->wwwroot
-                . 'search/?subtype=blog&owner_guid='.$page_owner->guid
-                . '&tagtype=universal_categories&tag=','subtype' => 'predictions',
-        'owner_guid' => $page_owner->guid));
 
 
 // Get the current page's viewer
@@ -36,13 +38,17 @@ if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     }
 }
 
+add_submenu_item( 'Predictions Home', $CONFIG->wwwroot . "pg/mod/predictions/");
+add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
+add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
+add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");
 
-// Display them in the page
-$left  = '<br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
-$left .= '<br/>This is a <i><b>preview</b></i> of the upcomping prediction markets module.  We will be in <b>testng mode</b> this month, betting is expected in the first week of May, with a possible <b>balance reset</b> on 1 June, as necessary.<br/><br/>Click to <a href="add.php">Add</a> a prediction market.';
-$left .= '<br/><br/>List your <a href="transactions.php">transactions</a>';
-$left .= '<br/><br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.0),2)  . ' hours until your next reward';
-$body  = elgg_view_layout("two_column_left_sidebar", $left, $body);
+$left  = '<br/>This is a <i><b>preview</b></i> of the upcomping prediction markets module.  We will be in <b>beta testng mode</b> this month, betting is currently turned on for only one market.  <br/><br/>*NOTE* There will possible <b>balance reset</b> on 1 June.';
+$left .= '<br/><br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
+$left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.0),2)  . ' hours until your next reward';
+
+// layout the page
+$body = elgg_view_layout('two_column_left_sidebar', $left, $body);
 
 page_draw("Predictions",$body);
 

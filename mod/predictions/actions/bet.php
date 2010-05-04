@@ -13,8 +13,16 @@ $m = get_entity(get_input('market'));
 $price = get_input('price');
 $option = get_input('option');
 
-//system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
-//forward('mod/predictions/index.php');
+if ($page_viewer->guid != 2 && $m->guid != 1756) {
+    system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
+    forward('mod/predictions/index.php');
+}
+
+if ($m->status != 'open') {
+    system_message('Market is no longer open.');
+    forward('mod/predictions/index.php');
+}
+
 
 // validation
 if ($page_viewer->opendollars < $size) {
@@ -75,8 +83,8 @@ if ($option == 'option1') {
     $m->value1 = $m->value1 +$diff;
     $m->value2 = $m->value2 -$diff;
 } else {
-    $m->value1 = $m->value1 +$diff;
-    $m->value2 = $m->value2 -$diff;
+    $m->value1 = $m->value1 -$diff;
+    $m->value2 = $m->value2 +$diff;
 }
 
 
@@ -84,6 +92,6 @@ if ($option == 'option1') {
 $t->save();
 
 // forward user 
-forward('mod/predictions/index.php');
+forward('mod/predictions/transactions.php');
 ?>
 

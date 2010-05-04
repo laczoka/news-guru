@@ -4,6 +4,7 @@ include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
 // make sure only logged in users can see this page	
 gatekeeper();
+$page_viewer = get_loggedin_user();
 
 // set the title
 $title = "Create a new prediction";
@@ -14,8 +15,17 @@ $area2 = elgg_view_title($title);
 // Add the form to this section
 $area2 .= elgg_view("predictions/form");
 
+add_submenu_item( 'Predictions Home', $CONFIG->wwwroot . "pg/mod/predictions/");
+add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
+add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
+add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");
+
+$left  = '<br/>This is a <i><b>preview</b></i> of the upcomping prediction markets module.  We will be in <b>beta testng mode</b> this month, betting is currently turned on for only one market.  <br/><br/>*NOTE* There will possible <b>balance reset</b> on 1 June.';
+$left .= '<br/><br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
+$left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.0),2)  . ' hours until your next reward';
+
 // layout the page
-$body = elgg_view_layout('two_column_left_sidebar', '', $area2);
+$body = elgg_view_layout('two_column_left_sidebar', $left, $area2);
 
 // draw the page
 page_draw($title, $body);

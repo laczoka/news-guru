@@ -87,6 +87,8 @@ if ($option == 'option1') {
 
 $page_viewer->opendollars = $page_viewer->opendollars + round($fair, 0);
 system_message('$' . round($fair) . ' has been credited to your account.');
+$t->settlementPrice = round($fair);
+$t->settlementDate = time();
 
 $t->status = 'closed';
 

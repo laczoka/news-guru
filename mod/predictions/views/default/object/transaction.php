@@ -72,15 +72,18 @@ $option = $t->option;
     
     ?>
 
-    <p><strong>Transaction ID:</strong> <?php echo $t->guid; ?></p>
     <p><strong>Market:</strong> <?php echo $m->title ; ?></p>
-    <p><strong>Selection:</strong> <?php echo $option; ?></p>
-    <p><strong>Your Price:</strong> <?php echo ($option == 'option1')?round($t->price*100.0,2):round($t->price*100.0,2); ?>%</p>
+    <p><strong>Selection:</strong> <?php echo ($option == 'option1')?$m->option1:$m->option2; ?></p>
+    <?php /*
+    <p><strong>Transaction ID:</strong> <?php echo $t->guid; ?></p>
     <p><strong>Spot Price:</strong> <?php echo ($option == 'option1')?round($m->value1*100.0,2):round($m->value2*100.0,2); ?>%</p>
     <p><strong>Size:</strong> $<?php echo $vars['entity']->size; ?></p>
+     */?>
+    <p><strong>Your Price:</strong> <?php echo ($option == 'option1')?round($t->price*100.0,2):round($t->price*100.0,2); ?>%</p>
 
-    <p><strong>Return if you win:</strong> +$<?php echo round($ev, 2) ?></p>
+    <p><strong>Return if you win:</strong> +$<?php echo round($ev, 0) ?></p>
     <p><strong>Loss if you lose:</strong> -$<?php echo $size ?> </p>
+    <?php /*
     <p><strong>EV:</strong> +$<?php echo round($ev, 20) ?></p>
     <p><strong>Stretch:</strong> +$<?php echo round($stretch, 20) ?></p>
     <p><strong>Diff:</strong> +<?php echo round($diff, 40) ?></p>
@@ -88,11 +91,13 @@ $option = $t->option;
     <p><strong>Stretch2:</strong> +$<?php echo round($stretch2, 20) ?></p>
     <p><strong>Diff2:</strong> +<?php echo round($diff2, 40) ?></p>
     <p><strong>Fair2:</strong> +$<?php echo round($fair2, 20) ?></p>
+     */?>
+    <p><strong>Fair Value:</strong> +$<?php echo round($fair2, 0) ?></p>
 
     <?php
 
     if (!empty($vars['entity']->status )) {
-        echo '<strong>Status: </strong>' . $vars['entity']->status . '<br/>';
+        //echo '<strong>Status: </strong>' . $vars['entity']->status . '<br/>';
     }
     ?>
 

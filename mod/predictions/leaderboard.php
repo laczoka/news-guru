@@ -11,23 +11,23 @@ $START_AMOUNT = 1000;
 $DAILY_AMOUNT = 20;
 
 
-$e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
-    'offset' => 0, 'full_view' => FALSE));
+$e = elgg_get_entities(array('type' => 'user', 'limit' => 0,
+    'offset' => $offset, 'full_view' => FALSE));
 
-$m = get_entity(get_input('market'));
+function cmp( $a, $b )
+{
+  if(  $a->opendoallars ==  $b->opendollars ){ return 0 ; }
+  return ($a->opendollars < $b->opendollars) ? 1 : -1;
+}
+usort($e,'cmp');
 
-$body = 'Market = ' . $m->guid . '<br/><br/>';
-foreach ($e as $t) {
-    if ($m->guid == $t-> market) {
-        $body .=  ++$j . '. owner : ' . $t->owner_guid . ' $' . $t->size  . ' status ' . $t->status . ' market ' . $t->market . '<br/><br/> ';
-        if ($t->status == 'open') {
-            $owner = get_entity($t->owner_guid);
-            $t->status = 'void';
-            $owner->opendollars += $t->size;
-        }
+//$body = elgg_view_entity_list($body, 0, 0, 30, FALSE, FALSE);
+$body = 'All Time Net Worth<br/><br/>';
+foreach ($e as $i) {
+    if (!empty($i->opendollars)) {
+        $body .=  ++$j . '. ' . $i->username . ' $' . $i->opendollars  . ' <br/><br/> ';
     }
-    $m->status = 'void';
-        //print_r($i);
+    //print_r($i);
 }
 
 
