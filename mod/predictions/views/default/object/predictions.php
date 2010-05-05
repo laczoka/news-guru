@@ -1,10 +1,25 @@
-<?php echo elgg_view_title($vars['entity']->title); 
+<?php echo elgg_view_title('<a href="' . $vars['entity']->getURL() . '">'
+        . $vars['entity']->guid . ' : ' .$vars['entity']->title . '</a>');
 
 global $CONFIG;
-include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
+include_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))) . "/engine/start.php"))));
 
 gatekeeper();
 $page_viewer = get_loggedin_user();
+$size = 100.0;
+$volume = 0.0;
+
+$e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
+    'offset' => 0, 'full_view' => FALSE));
+
+$m = $vars['entity'];
+
+foreach ($e as $t) {
+    if ($m->guid == $t->market) {
+        $volume += $size;
+    }
+}
+
 
 ?>
 
@@ -134,6 +149,8 @@ if (!empty($vars['entity']->settlement )) {
         </span>
     </form>
 <?php } ?>
+
+<?php echo '<br/>Betting Volume: $'. $volume; ?>
 
 <?php echo '<br/>' . elgg_view('output/tags', array('tags' => $vars['entity']->tags)); ?>
 

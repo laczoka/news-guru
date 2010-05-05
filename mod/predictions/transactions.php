@@ -12,13 +12,10 @@ $START_AMOUNT = 1000;
 
 
 //$body = elgg_list_entities(array('type' => 'object', 'subtype' => 'transaction', 'owner_guids' => 0, 'limit' => 10, 'full_view' => TRUE, 'status' => 'open', metadata_name => 'status', metadata_value => 'open'));
-$e = elgg_get_entities_from_metadata(array('type' => 'object', 'subtype' => 'transaction', metadata_name => 'status', metadata_value => 'open', 'full_view' => FALSE ));
-foreach ($e as $k => $t) {
-    if ($page_viewer->guid != $t->owner_guid) {
-        unset($e[$k]);
-    }
-}
-$body = elgg_view_entity_list($e);
+$e = elgg_get_entities_from_metadata(array('type' => 'object', 'subtype' => 'transaction', 
+    metadata_name => 'status', metadata_value => 'open', owner_guids => $page_viewer->guid,
+    'full_view' => FALSE ));
+$body = elgg_view_entity_list($e, 0, 0, 0);
 //$body = elgg_view_entity_list($body);
 
 
@@ -30,7 +27,7 @@ if (!isset($page_viewer->opendollars)) {
             . $START_AMOUNT . ' have been credited to your account!');
 }
 
-add_submenu_item( 'Predictions Home', $CONFIG->wwwroot . "pg/mod/predictions/");
+add_submenu_item( 'Prediction Markets', $CONFIG->wwwroot . "pg/mod/predictions/");
 add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
 add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
 add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");

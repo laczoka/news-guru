@@ -2,6 +2,7 @@
 // only logged in users can add predictions
 gatekeeper();
 
+elgg_set_ignore_access(TRUE);
 
 
 
@@ -21,6 +22,10 @@ if ($t->status == 'closed') {
     forward('mod/predictions/index.php');
 }
 
+if ($page_viewer->guid != 2  ) {
+    //system_message('Trade out temporarily disabled for debugging purposes ...');
+    //forward('mod/predictions/index.php');
+}
 
 // Get the integral of the weighted price
 $ev = $size * (1/$t->price) ;
@@ -30,21 +35,21 @@ $ev = $size * (1/$t->price) ;
 if ($option == 'option1') {
     $ev = $size * (1/$t->price) ;
 } else {
-    $ev = $size * (1/(1-$t->price)) ;
+    $ev = $size * (1/$t->price) ;
 }
 
 // How far approximately will we move?
 if ($option == 'option1') {
     $stretch =  $ev * $m->value1;
 } else {
-    $stretch =  $ev * $m->value1;
+    $stretch =  $ev * $m->value2;
 }
 
 // Get the approximate price difference
 if ($option == 'option1') {
     $diff = $stretch/$size * ($m->value2 / $factor);
 } else {
-    $diff = $stretch/$size * ($m->value2 / $factor);
+    $diff = $stretch/$size * ($m->value1 / $factor);
 }
 
 
@@ -52,7 +57,7 @@ if ($option == 'option1') {
 if ($option == 'option1') {
     $fair = ($m->value1 - $diff/2.0 )*$ev;
 } else {
-    $fair = ($m->value1 - $diff/2.0 )*$ev;
+    $fair = ($m->value2 - $diff/2.0 )*$ev;
 }
 
 // 2nd approximation
@@ -66,13 +71,13 @@ $f = $stretch2 / ($size * $factor);
 if ($option == 'option1') {
     $diff2 = $m->value1 - (( $m->value1 - $f) / ( 1 - $f))  ;
 } else {
-    $diff2 = $m->value1 - (( $m->value1 - $f) / ( 1 - $f))  ;
+    $diff2 = $m->value2 - (( $m->value2 - $f) / ( 1 - $f))  ;
 }
 
 if ($option == 'option1') {
     $fair2 = ($m->value1 - $diff2/2.0 )*$ev;
 } else {
-    $fair2 = ($m->value1 - $diff2/2.0 )*$ev;
+    $fair2 = ($m->value2 - $diff2/2.0 )*$ev;
 }
 
 
@@ -80,8 +85,8 @@ if ($option == 'option1') {
     $m->value1 = $m->value1 - $diff;
     $m->value2 = $m->value2 + $diff;
 } else {
-    $m->value1 = $m->value1 - $diff;
-    $m->value2 = $m->value2 + $diff;
+    $m->value1 = $m->value1 + $diff;
+    $m->value2 = $m->value2 - $diff;
 }
 
 

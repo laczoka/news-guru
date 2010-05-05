@@ -13,7 +13,7 @@ $m = get_entity(get_input('market'));
 $price = get_input('price');
 $option = get_input('option');
 
-if ($page_viewer->guid != 2 && $m->guid != 1756) {
+if ($page_viewer->guid != 2 && $m->guid != 1814) {
     system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
     forward('mod/predictions/index.php');
 }
@@ -36,10 +36,14 @@ if (empty($m)) {
 }
 
 // create a new predictions object
+elgg_set_ignore_access(TRUE);
+
 $t = new ElggObject();
 $t->title = 'Transaction ' . $t->guid;
-$t->description = '$100 wagered';
+$t->description = '$' . $size . ' wagered';
 $t->subtype = "transaction";
+$t->value1 = $m->value1;
+$t->value2 = $m->value2;
 // set values
 if (!empty($m)) {
     $t->market = $m->guid;
@@ -75,7 +79,7 @@ if ($option == 'option1') {
 if ($option == 'option1') {
     $t->price = $m->value1 + $diff/2.0;
 } else {
-    $t->price = $m->value2 - $diff/2.0;
+    $t->price = $m->value2 + $diff/2.0;
 }
 
 // adjust market
@@ -90,6 +94,7 @@ if ($option == 'option1') {
 
 // save to database
 $t->save();
+$m->save();
 
 // forward user 
 forward('mod/predictions/transactions.php');

@@ -11,6 +11,8 @@ $START_AMOUNT = 1000;
 $DAILY_AMOUNT = 20;
 $size = 100.0;
 
+elgg_set_ignore_access(TRUE);
+
 
 $e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
     'offset' => 0, 'full_view' => FALSE));
@@ -56,7 +58,7 @@ if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     }
 }
 
-add_submenu_item( 'Predictions Home', $CONFIG->wwwroot . "pg/mod/predictions/");
+add_submenu_item( 'Prediction Markets', $CONFIG->wwwroot . "pg/mod/predictions/");
 add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
 add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
 add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");

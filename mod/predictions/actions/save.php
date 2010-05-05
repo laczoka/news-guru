@@ -1,6 +1,7 @@
 <?php
 // only logged in users can add predictions
 gatekeeper();
+elgg_set_ignore_access(TRUE);
 
 // get the form input
 $title = get_input('title');

@@ -5,6 +5,8 @@ global $CONFIG;
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
 gatekeeper();
+elgg_set_ignore_access(TRUE);
+
 $page_viewer = get_loggedin_user();
 
 $START_AMOUNT = 1000;
@@ -24,6 +26,12 @@ foreach ($e as $t) {
             $owner = get_entity($t->owner_guid);
             $t->status = 'void';
             $owner->opendollars += $t->size;
+            $t->save();
+        } else if ($t->status == 'open') {
+            $t->status = 'void';
+            $owner->opendollars += $t->size;
+            $owner->opendollars -= $t->settlementPrice;
+            $t->save();
         }
     }
     $m->status = 'void';
@@ -46,7 +54,7 @@ if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     }
 }
 
-add_submenu_item( 'Predictions Home', $CONFIG->wwwroot . "pg/mod/predictions/");
+add_submenu_item( 'Prediction Markets', $CONFIG->wwwroot . "pg/mod/predictions/");
 add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
 add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
 add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");

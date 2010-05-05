@@ -38,7 +38,7 @@ if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     }
 }
 
-add_submenu_item( 'Predictions Home', $CONFIG->wwwroot . "pg/mod/predictions/");
+add_submenu_item( 'Prediction Markets', $CONFIG->wwwroot . "pg/mod/predictions/");
 add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
 add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
 add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");
