@@ -14,8 +14,8 @@ $price = get_input('price');
 $option = get_input('option');
 
 if ($page_viewer->guid != 2 && $m->guid != 1814) {
-    system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
-    forward('mod/predictions/index.php');
+    //system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
+    //forward('mod/predictions/index.php');
 }
 
 if ($m->status != 'open') {

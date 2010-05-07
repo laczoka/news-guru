@@ -7,9 +7,10 @@ gatekeeper();
 $page_viewer = get_loggedin_user();
 
 if ($page_viewer->guid != 2 ) {
-    system_message('Add market is disabled for the next day or so...');
+    system_message('Edit market is disabled for the next day or so...');
     forward('mod/predictions/index.php');
 }
+$p = get_entity(get_input('predictions'));
 
 // set the title
 $title = "Create a new prediction";
@@ -18,7 +19,7 @@ $title = "Create a new prediction";
 $area2 = elgg_view_title($title);
 
 // Add the form to this section
-$area2 .= elgg_view("predictions/add");
+$area2 .= elgg_view("predictions/edit", array('entity' => $p));
 
 add_submenu_item( 'Prediction Markets', $CONFIG->wwwroot . "pg/mod/predictions/");
 add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");

@@ -120,6 +120,8 @@ echo '<tr><td>' . $vars['entity']->option2 . '</td>';
 
 echo '</table>';
 
+
+
 if (!empty($vars['entity']->suspend)) {
     echo '<strong>Suspend Time: </strong>' . $vars['entity']->suspend . '<br/>';
 }
@@ -148,10 +150,13 @@ if (!empty($vars['entity']->settlement )) {
             ?>
         </span>
     </form>
+    <a href="<?php echo $vars['url']; ?>mod/predictions/edit.php?predictions=<?php echo $vars['entity']->getGUID(); ?>"><?php echo elgg_echo("edit"); ?></a>  &nbsp;
+    <a href="<?php echo $vars['url']; ?>mod/predictions/suspend.php?predictions=<?php echo $vars['entity']->getGUID(); ?>"><?php echo elgg_echo("Suspend"); ?></a>  &nbsp;
 <?php } ?>
 
 <?php echo '<br/>Betting Volume: $'. $volume; ?>
 
 <?php echo '<br/>' . elgg_view('output/tags', array('tags' => $vars['entity']->tags)); ?>
+
 
 </div>

@@ -8,7 +8,7 @@ include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 $e = elgg_get_entities (array('type' => 'object', 'subtype' => 'predictions', limit => 0,
     'offset' => 0, 'full_view' => FALSE));
 foreach ($e as $k => $p) {
-    if ($p->status != 'open') {
+    if ($p->status != 'open'  && $p->status != 'suspended') {
         unset ($e[$k]);
     }
 }

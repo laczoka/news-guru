@@ -22,6 +22,12 @@ if ($t->status == 'closed') {
     forward('mod/predictions/index.php');
 }
 
+// vaidation
+if ($m->status != 'open') {
+    register_error('This market is no longer open.');
+    forward('mod/predictions/index.php');
+}
+
 if ($page_viewer->guid != 2  ) {
     //system_message('Trade out temporarily disabled for debugging purposes ...');
     //forward('mod/predictions/index.php');

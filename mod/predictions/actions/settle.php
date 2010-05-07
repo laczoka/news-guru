@@ -23,22 +23,31 @@ $option = get_input('option');
 $body = 'Market = ' . $m->guid . '<br/><br/>';
 foreach ($e as $t) {
     if ($m->guid == $t-> market) {
-        $body .=  ++$j . '. owner : ' . $t->owner_guid . ' size: $' . $t->size  . ' status: '
-                . $t->status . ' market: ' . $t->market . ' option ' . $option . '<br/><br/> ';
+        $owner = get_entity($t->owner_guid);
+        $ev = $size * (1/$t->price) ;
+        if ($option == $t->option) {
+            $return = $t->status == 'open' ? round($ev) : 0.0;
+        } else {
+            $return = $t->status == 'open' ? 0.0 : 0.0;
+        }
+
+        $body .=  ++$j . '. owner : ' . $t->owner_guid . ' ' . round($t->price,4) . ' size: $' . $t->size  . ' status: '
+                . $t->status . ' market: ' . $t->market . ' option ' . $t->option 
+                . ' settled ' . $t->settlementPrice . ' return ' . round($return) . '<br/><br/> ';
+
         if ($t->status == 'open') {
-            $owner = get_entity($t->owner_guid);
-            $t->status = 'closed';
-            $ev = $size * (1/$t->price) ;
             if ($option == $t->option) {
-                $owner->opendollars += round($ev);
-                $t->settledPrice = round($ev);
+                $owner->opendollars += round($return);
+                $t->settlementPrice = round($return);
             } else {
-                $t->settledPrice = 0.0;
+                $owner->opendollars += round($return);
+                $t->settlementPrice = round($return);
             }
-            $t->settledDate = time();
+            $t->settlementDate = time();
+            $t->status = 'settled';
         }
     }
-    $m->status = 'void';
+    $m->status = 'settled';
         //print_r($i);
 }
 
