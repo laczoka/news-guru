@@ -47,8 +47,13 @@ $left  = '<br/>This is a <i><b>preview</b></i> of the upcomping prediction marke
 $left .= '<br/><br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
 $left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.0),2)  . ' hours until your next reward';
 
+		// Get categories, if they're installed
+		global $CONFIG;
+		$area3 = elgg_view('blog/categorylist',array('baseurl' => $CONFIG->wwwroot . 'search/?search_type=tags&tagtype=universal_categories&tag=','subtype' => 'blog', 'owner_guid' => $page_owner->guid));
+
+
 // layout the page
-$body = elgg_view_layout('two_column_left_sidebar', $left, $body);
+$body = elgg_view_layout('two_column_left_sidebar', $left, $body, $area3);
 
 page_draw("Predictions",$body);
 

@@ -6,14 +6,18 @@ include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 gatekeeper();
 $page_viewer = get_loggedin_user();
 
-if ($page_viewer->guid != 2 ) {
-    system_message('Edit market is disabled for the next day or so...');
+$p = get_entity(get_input('predictions'));
+if ($page_viewer->guid != 2 && $page_viewer->guid != $p->owner_guid ) {
+    system_message('Suspend market is not currently available...');
     forward('mod/predictions/index.php');
 }
-$p = get_entity(get_input('predictions'));
 
 // set the title
 $p->status = 'suspended';
 
+system_message('Market has been suspended');
+
+// forward user to a page that displays the predictions
+forward('mod/predictions/index.php');
 
 ?>

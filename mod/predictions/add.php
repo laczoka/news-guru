@@ -7,8 +7,8 @@ gatekeeper();
 $page_viewer = get_loggedin_user();
 
 if ($page_viewer->guid != 2 ) {
-    system_message('Add market is disabled for the next day or so...');
-    forward('mod/predictions/index.php');
+    //system_message('Add market is disabled for the next day or so...');
+    //forward('mod/predictions/index.php');
 }
 
 // set the title

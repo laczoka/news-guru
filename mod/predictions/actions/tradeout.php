@@ -105,7 +105,7 @@ $t->status = 'closed';
 
 $t->save();
 
-// forward user to a page that displays the post
+// forward user to a page that displays the predictions
 forward('mod/predictions/index.php');
 ?>
 
