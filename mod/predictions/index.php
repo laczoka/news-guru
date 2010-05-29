@@ -20,7 +20,6 @@ global $CONFIG;
 
 
 // Get the current page's viewer
-gatekeeper();
 $page_viewer = get_loggedin_user();
 
 //unset($page_viewer->opendollars);

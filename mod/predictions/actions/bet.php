@@ -90,7 +90,7 @@ if ($option == 'option1') {
     $m->value1 = $m->value1 -$diff;
     $m->value2 = $m->value2 +$diff;
 }
-
+$m->volume += $size;
 
 // save to database
 $t->save();

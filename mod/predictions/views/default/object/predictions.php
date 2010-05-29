@@ -2,23 +2,25 @@
         . $vars['entity']->guid . ' : ' .$vars['entity']->title . '</a>');
 
 global $CONFIG;
-include_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))) . "/engine/start.php"))));
+include_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . "/engine/start.php");
 
-gatekeeper();
 $page_viewer = get_loggedin_user();
 $size = 100.0;
 $volume = 0.0;
+$m = $vars['entity'];
 
+/*
 $e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
     'offset' => 0, 'full_view' => FALSE));
 
-$m = $vars['entity'];
 
 foreach ($e as $t) {
     if ($m->guid == $t->market) {
         $volume += $size;
     }
 }
+*/
+
 $owner = get_entity($m->owner_guid);
 
 ?>
@@ -157,7 +159,7 @@ if (!empty($vars['entity']->settlement )) {
     <a href="<?php echo $vars['url']; ?>mod/predictions/suspend.php?predictions=<?php echo $vars['entity']->getGUID(); ?>"><?php echo elgg_echo("Suspend"); ?></a>  &nbsp;
 <?php } ?>
 
-<?php echo '<br/>Betting Volume: $'. $volume; ?>
+<?php $m->volume = empty($volume)?(empty($m->volume)?0:$m->volume):$volume; echo '<br/>Betting Volume: $'. $m->volume; ?>
 
 <?php echo '<br/>Question by : ' . $owner->username . ' <br/>' . elgg_view('output/tags', array('tags' => $vars['entity']->tags)); ?>
 
