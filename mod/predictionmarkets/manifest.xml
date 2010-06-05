@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+        <field key="author" value="Constantinus van der Kruijs" />
+        <field key="version" value="0.1" />
+        <field key="description" value="Elgg Prediction Markets Module" />
+        <field key="website" value="http://news-guru.com/" />
+        <field key="copyright" value="(C) Constantinus van der Kruijs" />
+        <field key="licence" value="GNU Public License version 2" />
+        <field key="elgg_version" value="2010030101" />
+</plugin_manifest>
