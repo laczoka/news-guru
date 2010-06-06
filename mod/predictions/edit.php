@@ -26,7 +26,7 @@ add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php
 add_submenu_item( 'Your Account', $CONFIG->wwwroot . "pg/mod/predictions/transactions.php");
 add_submenu_item( 'Leaderboard', $CONFIG->wwwroot . "pg/mod/predictions/leaderboard.php");
 
-$left  = '<br/>This is a <i><b>preview</b></i> of the upcomping prediction markets module.  We will be in <b>beta testng mode</b> this month, betting is currently turned on for only one market.  <br/><br/>*NOTE* There will possible <b>balance reset</b> on 1 June.';
+$left = elgg_echo('predictions:disclaimer');
 $left .= '<br/><br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
 $left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.0),2)  . ' hours until your next reward';
 
