@@ -26,6 +26,7 @@ $page_viewer = get_loggedin_user();
 //unset($page_viewer->lastdaily);
 if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     $page_viewer->opendollars = $START_AMOUNT;
+    $page_viewer->lastdaily = time();
     system_message ('Thank you for playing the Prediction Markets, $'
             . $START_AMOUNT . ' have been credited to your account!');
 } else {
