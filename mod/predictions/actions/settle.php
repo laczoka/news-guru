@@ -2,7 +2,7 @@
 // Get the current page's viewer
 // Get categories, if they're installed
 global $CONFIG;
-include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
+include_once($CONFIG->wwwroot . "/engine/start.php");
 
 gatekeeper();
 $page_viewer = get_loggedin_user();
@@ -14,11 +14,13 @@ $size = 100.0;
 elgg_set_ignore_access(TRUE);
 
 
-$e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
-    'offset' => 0, 'full_view' => FALSE));
-
 $m = get_entity(get_input('market'));
 $option = get_input('option');
+
+$e = elgg_get_entities_from_metadata(array( "metadata_name_value_pairs"
+        => array( "name" => "market", "value" => $m->guid)
+                                     )
+     );
 
 $body = 'Market = ' . $m->guid . '<br/><br/>';
 foreach ($e as $t) {
