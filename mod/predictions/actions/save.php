@@ -11,23 +11,36 @@ $value1 = get_input('value1');
 $option2 = get_input('option2');
 $value2 = get_input('value2');
 $settlement = get_input('settlement');
+$suspend = get_input('suspend');
+$tags = string_to_tag_array(get_input('tags'));
+
+$add_market_input = array(
+    'title' => $title,
+    'body' => $body,
+    'tags' => get_input('tags'), // get the raw tag string
+    'option1' => $option1,
+    'value1' => $value1,
+    'option2' => $option2,
+    'value2' => $value2,
+    'suspend' => $suspend,
+    'settlement' => $settlement 
+);
+
+$_SESSION['predictions/add_market'] = $add_market_input;
 
 $value1 = $value1 / 100.0;
 $value2 = $value2 / 100.0;
-
-$suspend = get_input('suspend');
-$tags = string_to_tag_array(get_input('tags'));
 
 // validation
 if (empty($value1) || empty($value2) || empty($option1) || empty($option2)
         ||empty($title) || empty($body) ) {
     register_error('Please fill in description, title, and at least 2 options');
-    forward('mod/predictions/index.php');
+    forward('mod/predictions/add.php');
 }
 
 if ( $value1 + $value2 != 1.0 ) {
     register_error('Percentages must add up to 100%');
-    forward('mod/predictions/index.php');
+    forward('mod/predictions/add.php');
 }
 
 
@@ -66,6 +79,8 @@ $prediction->status = 'open';
 
 // save to database
 $prediction->save();
+
+unset($_SESSION['predictions/add_market']);
 
 // forward user to a page that displays the post
 forward('mod/predictions/index.php');

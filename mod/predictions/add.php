@@ -18,7 +18,7 @@ $title = "Create a new prediction";
 $area2 = elgg_view_title($title);
 
 // Add the form to this section
-$area2 .= elgg_view("predictions/add");
+$area2 .= elgg_view("predictions/add", $_SESSION['predictions/add_market']);
 
 add_submenu_item( 'Prediction Markets', $CONFIG->wwwroot . "pg/mod/predictions/");
 add_submenu_item( 'Add a Market', $CONFIG->wwwroot . "pg/mod/predictions/add.php");
