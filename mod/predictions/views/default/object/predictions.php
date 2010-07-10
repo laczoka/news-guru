@@ -156,7 +156,7 @@ if (!empty($vars['entity']->settlement )) {
 <?php } ?>
 
 <?php if ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid  || $page_viewer->isAdmin()) { ?>
-    <a href="<?php echo $vars['url']; ?>mod/predictions/suspend.php?predictions=<?php echo $vars['entity']->getGUID(); ?>"><?php echo elgg_echo("Suspend"); ?></a>  &nbsp;
+    <a href="<?php echo elgg_add_action_tokens_to_url($vars['url']."action/predictions/suspend?predictions=".$vars['entity']->getGUID()) ?>"><?php echo elgg_echo("Suspend"); ?></a>  &nbsp;
 <?php } ?>
 
 <?php $m->volume = empty($volume)?(empty($m->volume)?0:$m->volume):$volume; echo '<br/>Betting Volume: $'. $m->volume; ?>

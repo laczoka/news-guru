@@ -25,4 +25,6 @@ register_action("predictions/tradeout", false, $CONFIG->pluginspath . "predictio
 register_action("predictions/bet", false, $CONFIG->pluginspath . "predictions/actions/bet.php");
 register_action("predictions/settle", false, $CONFIG->pluginspath . "predictions/actions/settle.php");
 register_action("predictions/void", false, $CONFIG->pluginspath . "predictions/actions/void.php");
+register_action("predictions/suspend", false, $CONFIG->pluginspath . "predictions/actions/suspend.php");
+
 ?>
