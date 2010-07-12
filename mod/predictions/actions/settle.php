@@ -1,8 +1,4 @@
 <?php
-// Get the current page's viewer
-// Get categories, if they're installed
-global $CONFIG;
-include_once($CONFIG->wwwroot . "/engine/start.php");
 
 gatekeeper();
 $page_viewer = get_loggedin_user();
@@ -17,9 +13,12 @@ elgg_set_ignore_access(TRUE);
 $m = get_entity(get_input('market'));
 $option = get_input('option');
 
-$e = elgg_get_entities_from_metadata(array( "metadata_name_value_pairs"
-        => array( "name" => "market", "value" => $m->guid)
-                                     )
+$e = elgg_get_entities_from_metadata(array(
+        'type'                  => "object",
+        'subtype'               => "transaction",
+        'limit'                 =>  0,
+        'offset'                =>  0, 
+        "metadata_name_value_pairs" => array( "name" => "market", "value" => $m->guid) )
      );
 
 $body = 'Market = ' . $m->guid . '<br/><br/>';
