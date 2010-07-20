@@ -9,17 +9,21 @@ $page_viewer = get_loggedin_user();
 
 
 $START_AMOUNT = 1000;
+$count_per_page = 10;
+$offset = get_input("offset", 0);
 
-
-//$body = elgg_list_entities(array('type' => 'object', 'subtype' => 'transaction', 'owner_guids' => 0, 'limit' => 10, 'full_view' => TRUE, 'status' => 'open', metadata_name => 'status', metadata_value => 'open'));
-$e = elgg_get_entities_from_metadata(array('type' => 'object', 'subtype' => 'transaction', 
+$transaction_query = array('type' => 'object', 'subtype' => 'transaction', 
     metadata_name => 'status', metadata_value => 'open', owner_guids => $page_viewer->guid,
-    'full_view' => FALSE ));
-$body = elgg_view_entity_list($e, 0, 0, 0);
-//$body = elgg_view_entity_list($body);
+    'full_view' => FALSE,
+    'offset' => $offset,
+    'limit' => $count_per_page );
 
+$transactions = elgg_get_entities_from_metadata($transaction_query);
 
+$no_of_transactions = elgg_get_entities_from_metadata(
+						array_merge($transaction_query, array('count' => true)));
 
+$body = elgg_view_entity_list($transactions, $no_of_transactions, $offset, $count_per_page);
 
 if (!isset($page_viewer->opendollars)) {
     $page_viewer->opendollars = $START_AMOUNT;
