@@ -48,9 +48,8 @@ foreach ($e as $t) {
             $t->status = 'settled';
         }
     }
-    $m->status = 'settled';
-        //print_r($i);
 }
+$m->status = 'settled';
 
 
 //unset($page_viewer->opendollars);

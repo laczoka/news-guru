@@ -35,9 +35,8 @@ foreach ($e as $t) {
             $t->save();
         }
     }
-    $m->status = 'void';
-        //print_r($i);
 }
+$m->status = 'void';
 
 
 //unset($page_viewer->opendollars);
