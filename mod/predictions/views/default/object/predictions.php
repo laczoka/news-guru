@@ -8,21 +8,7 @@ $page_viewer = get_loggedin_user();
 $size = 100.0;
 $volume = 0.0;
 $m = $vars['entity'];
-
-/*
-$e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
-    'offset' => 0, 'full_view' => FALSE));
-
-
-foreach ($e as $t) {
-    if ($m->guid == $t->market) {
-        $volume += $size;
-    }
-}
-*/
-
 $owner = get_entity($m->owner_guid);
-
 ?>
 
 <div class="contentWrapper">
@@ -54,7 +40,7 @@ $owner = get_entity($m->owner_guid);
             </span>
         </form>
     </td>
-<?php if ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid || $page_viewer->isAdmin() ) { ?>
+<?php if ($page_viewer && ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid || $page_viewer->isAdmin() )) { ?>
 <td>
 <form action="<?php echo $vars['url']; ?>action/predictions/settle" method="post">
         <span>
@@ -97,7 +83,7 @@ echo '<tr><td>' . $vars['entity']->option2 . '</td>';
         </span>
     </form>
 </td>
-<?php if ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid || $page_viewer->isAdmin()) { ?>
+<?php if ($page_viewer && ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid || $page_viewer->isAdmin())) { ?>
 <td>
 <form action="<?php echo $vars['url']; ?>action/predictions/settle" method="post">
         <span>
@@ -138,7 +124,7 @@ if (!empty($vars['entity']->settlement )) {
 
 <br/>
 
-<?php if ($page_viewer->guid == 2 || $page_viewer->isAdmin()) { ?>
+<?php if ($page_viewer && ($page_viewer->guid == 2 || $page_viewer->isAdmin())) { ?>
 <br/>
 <form action="<?php echo $vars['url']; ?>action/predictions/void" method="post">
         <span>
@@ -155,7 +141,7 @@ if (!empty($vars['entity']->settlement )) {
     <a href="<?php echo $vars['url']; ?>mod/predictions/edit.php?predictions=<?php echo $vars['entity']->getGUID(); ?>"><?php echo elgg_echo("edit"); ?></a>  &nbsp;
 <?php } ?>
 
-<?php if ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid  || $page_viewer->isAdmin()) { ?>
+<?php if ($page_viewer && ($page_viewer->guid == 2  || $page_viewer->guid == $m->owner_guid  || $page_viewer->isAdmin())) { ?>
     <a href="<?php echo elgg_add_action_tokens_to_url($vars['url']."action/predictions/suspend?predictions=".$vars['entity']->getGUID()) ?>"><?php echo elgg_echo("Suspend"); ?></a>  &nbsp;
 <?php } ?>
 
