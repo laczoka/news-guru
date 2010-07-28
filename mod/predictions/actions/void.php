@@ -1,22 +1,22 @@
 <?php
-// Get the current page's viewer
-// Get categories, if they're installed
-global $CONFIG;
-include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
 gatekeeper();
-elgg_set_ignore_access(TRUE);
-
 $page_viewer = get_loggedin_user();
 
 $START_AMOUNT = 1000;
 $DAILY_AMOUNT = 20;
 
-
-$e = elgg_get_entities(array('type' => 'object', 'subtype' => 'transaction', limit => 0,
-    'offset' => 0, 'full_view' => FALSE));
+elgg_set_ignore_access(TRUE);
 
 $m = get_entity(get_input('market'));
+
+$e = elgg_get_entities_from_metadata(array(
+        'type'                  => "object",
+        'subtype'               => "transaction",
+        'limit'                 =>  0,
+        'offset'                =>  0, 
+        "metadata_name_value_pairs" => array( "name" => "market", "value" => $m->guid) )
+     );
 
 $body = 'Market = ' . $m->guid . '<br/><br/>';
 foreach ($e as $t) {
@@ -27,8 +27,9 @@ foreach ($e as $t) {
             $t->status = 'void';
             $owner->opendollars += $t->size;
             $t->save();
-        } else if ($t->status == 'open') {
-            $t->status = 'void';
+        } else if ($t->status == 'settled') {
+            $owner = get_entity($t->owner_guid);
+        	$t->status = 'void';
             $owner->opendollars += $t->size;
             $owner->opendollars -= $t->settlementPrice;
             $t->save();
@@ -43,6 +44,7 @@ foreach ($e as $t) {
 //unset($page_viewer->lastdaily);
 if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     $page_viewer->opendollars = $START_AMOUNT;
+    $page_viewer->lastdaily = time();
     system_message ('Thank you for playing the Prediction Markets, $'
             . $START_AMOUNT . ' have been credited to your account!');
 } else {
