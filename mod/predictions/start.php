@@ -5,7 +5,7 @@ function predictions_init() {
 
     // Load system configuration
     global $CONFIG;
-
+    
     // Set up menu for logged in users
     if (isloggedin()) {
 
@@ -15,7 +15,19 @@ function predictions_init() {
     } else {
         add_menu(elgg_echo('Predictions'), $CONFIG->wwwroot . "mod/predictions/index.php");
     }
+    
+    register_plugin_hook('cron', 'minute', 'predictions_update_leaderboard_cron');
 }
+
+function predictions_update_leaderboard_cron() {
+	try {
+	   include dirname(__FILE__).'/actions/update_leaderboard.php';
+	} catch (Exception $e) {
+		error_log("Exception occured while executing update_leaderboard: ".$e->getMessage());
+	}
+}
+
+
 
 // Make sure the blog initialisation function is called on initialisation
 register_elgg_event_handler('init','system','predictions_init');
@@ -26,5 +38,6 @@ register_action("predictions/bet", false, $CONFIG->pluginspath . "predictions/ac
 register_action("predictions/settle", false, $CONFIG->pluginspath . "predictions/actions/settle.php");
 register_action("predictions/void", false, $CONFIG->pluginspath . "predictions/actions/void.php");
 register_action("predictions/suspend", false, $CONFIG->pluginspath . "predictions/actions/suspend.php");
+register_action("predictions/update_leaderboard", false, $CONFIG->pluginspath . "predictions/actions/update_leaderboard.php");
 
 ?>

@@ -10,115 +10,53 @@ $page_viewer = get_loggedin_user();
 $START_AMOUNT = 1000;
 $DAILY_AMOUNT = 20;
 
+$offset = get_input("offset", 0);
+$users_per_page  = 50;
 
-$e = elgg_get_entities(array('type' => 'user', 'limit' => 0,
-    'offset' => $offset, 'full_view' => FALSE));
+$users_query = array('type' => 'user', 
+                     'limit' => $users_per_page,
+                     'offset' => $offset, 
+                     'full_view' => FALSE,
+                     'order_by_metadata' 
+                        => array('name' => 'opendollars', 'direction' => 'DESC', 'as' => 'integer'));
 
-$tr = elgg_get_entities_from_metadata(array('type' => 'object', 'subtype' => 'transaction',
-    metadata_name => 'status', metadata_value => 'open',
-    'full_view' => FALSE, limit => 0 ));
+$users = elgg_get_entities_from_metadata($users_query);
 
-$size = 100.0;
-$factor = 100.0;    // sensitivity factor
-$leaderboard = array();
-foreach ($tr as $t) {
-    // Get the integral of the weighted price
-    $ev = $size * (1/$t->price) ;
-
-    $m = get_entity($t->market);
-
-
-    // Get the integral of the weighted price
-    if ($t->option == 'option1') {
-        $ev = $size * (1/$t->price) ;
-    } else {
-        $ev = $size * (1/$t->price) ;
-    }
-
-    // How far approximately will we move?
-    if ($t->option == 'option1') {
-        $stretch =  $ev * $m->value1;
-    } else {
-        $stretch =  $ev * $m->value2;
-    }
-
-    // Get the approximate price difference
-    if ($t->option == 'option1') {
-        $diff = $stretch/$size * ($m->value2 / $factor);
-    } else {
-        $diff = $stretch/$size * ($m->value1 / $factor);
-    }
-
-
-    // Get the approximate trade out value
-    if ($t->option == 'option1') {
-        $fair = ($m->value1 - $diff/2.0 )*$ev;
-    } else {
-        $fair = ($m->value2 - $diff/2.0 )*$ev;
-    }
-
-    // 2nd approximation
-    if ($t->option == 'option1') {
-        $stretch2 =  $fair;
-    } else {
-        $stretch2 =  $fair;
-    }
-
-    $f = $stretch2 / ($size * $factor);
-    if ($t->option == 'option1') {
-        $diff2 = $m->value1 - (( $m->value1 - $f) / ( 1 - $f))  ;
-    } else {
-        $diff2 = $m->value2 - (( $m->value2 - $f) / ( 1 - $f))  ;
-    }
-
-    if ($t->option == 'option1') {
-        $fair2 = ($m->value1 - $diff2/2.0 )*$ev;
-    } else {
-        $fair2 = ($m->value2 - $diff2/2.0 )*$ev;
-    }
-
-    if (array_key_exists($t->owner_guid, $leaderboard)) {
-        $leaderboard[$t->owner_guid] += round($fair2);
-//error_log(' leaderboard ' . $leaderboard[$t->owner_guid] . ' for ' . $t->owner_guid );
-    } else {
-        $user = get_entity($t->owner_guid);
-        $leaderboard[$t->owner_guid] = $user->opendollars;
-        $leaderboard[$t->owner_guid] += round($fair2);
-//error_log(' leaderboard ' . $leaderboard[$t->owner_guid] . ' for ' . $t->owner_guid );
-    }
-}
-
+$no_of_users = elgg_get_entities_from_metadata(array_merge(array(count => TRUE), $users_query));
 
 function cmp( $a, $b ) {
-    //global $leaderboard;
-    /*
-    if( (!empty($leaderboard[$a->guid])?$leaderboard[$a->guid]:$a->opendollars) ==  (!empty($leaderboard[$b->guid])?$leaderboard[$b->guid]:$b->opendollars) ){ return 0 ; }
-    return ( (!empty($leaderboard[$a->guid])?$leaderboard[$a->guid]:$a->opendollars) < (!empty($leaderboard[$b->guid])?$leaderboard[$b->guid]:$b->opendollars) ) ? 1 : -1;
-     *
-     */
     $a = $a->opendollars;
     $b = $b->opendollars;
-    //$a = (!empty($leaderboard[$a->guid])?$leaderboard[$a->guid]:$a->opendollars);
-    //$b = (!empty($leaderboard[$b->guid])?$leaderboard[$b->guid]:$b->opendollars);
     if ( $a  == $b ) return 0;
     return ( $a < $b )? 1 : -1 ;
 }
-usort($e,'cmp');
+usort($users,'cmp');
 
-//$body = elgg_view_entity_list($body, 0, 0, 30, FALSE, FALSE);
-$body = 'All Time Net Worth (market value)<br/><br/>';
-foreach ($e as $i) {
-    if (!empty($i->opendollars)) {
-        $body .=  ++$j . '. ' . $i->username . ' $' . $i->opendollars . ' ($' .
-                (!empty($leaderboard[$i->guid])?$leaderboard[$i->guid]:$i->opendollars)
-                . ') <br/><br/> ';
-    }
-    //print_r($i);
+set_view_location('user/user', $CONFIG->pluginspath . 'predictions/views/default/leaderboard/');
+
+$nav = elgg_view('navigation/pagination',array(
+        'baseurl' => $_SERVER['REQUEST_URI'],
+        'offset' => $offset,
+        'count' => $no_of_users,
+        'limit' => $users_per_page,
+    ));
+
+$body .= $nav;
+
+$body .= "<div style='width:100%;text-align:center'>Last updated ".friendly_time((int)(time() / 60*5) * 60*5)."</div>";
+
+if ($page_viewer->isAdmin()) {
+    $body .= '<div style="width:100%;text-align:center"><a href="'.elgg_add_action_tokens_to_url($CONFIG->wwwroot."action/predictions/update_leaderboard").'">Update NOW!</a></div>';
+}
+foreach ($users as $i => $user)
+{
+   $body .= elgg_view('user/user',array('entity' => $user, 'order_no' => ($offset+$i+1)));
 }
 
+$body .= $nav;
 
-//unset($page_viewer->opendollars);
-//unset($page_viewer->lastdaily);
+
+
 if (!isset($page_viewer->opendollars) || $page_viewer->opendollars==null) {
     $page_viewer->opendollars = $START_AMOUNT;
     system_message ('Thank you for playing the Prediction Markets, $'
