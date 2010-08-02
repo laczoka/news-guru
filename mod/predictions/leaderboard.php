@@ -18,19 +18,11 @@ $users_query = array('type' => 'user',
                      'offset' => $offset, 
                      'full_view' => FALSE,
                      'order_by_metadata' 
-                        => array('name' => 'opendollars', 'direction' => 'DESC', 'as' => 'integer'));
+                        => array('name' => 'report_total_net_asset_value', 'direction' => 'DESC', 'as' => 'integer'));
 
 $users = elgg_get_entities_from_metadata($users_query);
 
 $no_of_users = elgg_get_entities_from_metadata(array_merge(array(count => TRUE), $users_query));
-
-function cmp( $a, $b ) {
-    $a = $a->opendollars;
-    $b = $b->opendollars;
-    if ( $a  == $b ) return 0;
-    return ( $a < $b )? 1 : -1 ;
-}
-usort($users,'cmp');
 
 set_view_location('user/user', $CONFIG->pluginspath . 'predictions/views/default/leaderboard/');
 
@@ -83,5 +75,4 @@ $left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.
 $body = elgg_view_layout('two_column_left_sidebar', $left, $body);
 
 page_draw("Predictions",$body);
-
 ?>

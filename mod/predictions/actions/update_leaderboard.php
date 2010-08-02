@@ -75,11 +75,35 @@ foreach ($tr as $t) {
 }
 
 // update Total Net Asset Value for each user
-foreach ($total_net_asset_value as $user_guid => $value) {
+// THIS CODE HAS BEEN REPLACED BY
+/*foreach ($total_net_asset_value as $user_guid => $value) {
 	$user = get_entity($user_guid);
 	$user->report_total_net_asset_value = $value;
-	$user->save();
+}*/
+// THE FOLLOWING
+// We need to make sure "report_total_net_asset_value" is set for every users in order to be able to
+// retrieve all users ordered by it
+
+$number_of_users_processed_per_run = 100;
+$user_query = array('type' => 'user', 'full_view' => FALSE, 
+                    'limit' => $number_of_users_processed_per_run, 
+                    'offset' => 0 );
+$total_number_of_users = elgg_get_entities( array_merge(  $user_query, array('count' =>  TRUE, 'limit' => 0 )) );
+
+while ($user_query['offset'] < $total_number_of_users) {
+	$users = elgg_get_entities( $user_query );
+	
+	foreach ($users as $user) {
+		$user->report_total_net_asset_value 
+		 = isset($total_net_asset_value[$user->guid]) ? 
+		          $total_net_asset_value[$user->guid] 
+		        : $user->opendollars;
+		$user->save();
+	}
+	
+	$user_query['offset'] += $number_of_users_processed_per_run;
 }
 
-forward('mod/predictions/leaderboard.php');
+if (1 != (int)get_input("cron"))
+    forward('mod/predictions/leaderboard.php');
 ?>

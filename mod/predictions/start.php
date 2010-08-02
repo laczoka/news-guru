@@ -21,6 +21,8 @@ function predictions_init() {
 
 function predictions_update_leaderboard_cron() {
 	try {
+	   // indicate that this is a cron job to prevent response generation and save CPU
+	   set_input('cron',1);
 	   include dirname(__FILE__).'/actions/update_leaderboard.php';
 	} catch (Exception $e) {
 		error_log("Exception occured while executing update_leaderboard: ".$e->getMessage());
