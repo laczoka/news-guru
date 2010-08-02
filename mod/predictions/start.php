@@ -16,7 +16,7 @@ function predictions_init() {
         add_menu(elgg_echo('Predictions'), $CONFIG->wwwroot . "mod/predictions/index.php");
     }
     
-    register_plugin_hook('cron', 'minute', 'predictions_update_leaderboard_cron');
+    register_plugin_hook('cron', 'fiveminute', 'predictions_update_leaderboard_cron');
 }
 
 function predictions_update_leaderboard_cron() {
