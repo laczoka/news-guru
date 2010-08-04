@@ -106,6 +106,6 @@ $t->status = 'closed';
 $t->save();
 
 // forward user to a page that displays the predictions
-forward('mod/predictions/index.php');
+forward('mod/predictions/transactions.php');
 ?>
 

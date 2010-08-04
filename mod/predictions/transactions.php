@@ -23,7 +23,9 @@ $transactions = elgg_get_entities_from_metadata($transaction_query);
 $no_of_transactions = elgg_get_entities_from_metadata(
 						array_merge($transaction_query, array('count' => true)));
 
-$body = elgg_view_entity_list($transactions, $no_of_transactions, $offset, $count_per_page);
+//$body = elgg_view_entity_list($transactions, $no_of_transactions, $offset, $count_per_page);
+//$body = '<br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
+$body = elgg_view('transaction/account', array('user'=> $page_viewer, 'open_transactions' => $transactions));
 
 if (!isset($page_viewer->opendollars)) {
     $page_viewer->opendollars = $START_AMOUNT;
@@ -41,14 +43,7 @@ $left = elgg_echo('predictions:disclaimer');
 $left .= '<br/><br/>You have $' . $page_viewer->opendollars . ' remaining<br/>';
 $left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.0),2)  . ' hours until your next reward';
 
-$body = '<br/>You have $' . $page_viewer->opendollars . ' remaining<br/>' . $body;
-
-
 $body  = elgg_view_layout("two_column_left_sidebar", $left, $body);
-
-
-
-
 
 page_draw("Predictions",$body);
 
