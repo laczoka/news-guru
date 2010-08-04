@@ -104,6 +104,20 @@ while ($user_query['offset'] < $total_number_of_users) {
 	$user_query['offset'] += $number_of_users_processed_per_run;
 }
 
+// save the update date
+$leaderboard = elgg_get_entities(array('type' => 'object', 'subtype' => 'leaderboard'));
+if ( !$leaderboard || !is_array($leaderboard)) {
+	    $leaderboard = new ElggObject();
+        $leaderboard->subtype = "leaderboard";
+        $leaderboard->title = "Leaderboard";
+        $leaderboard->access_id = ACCESS_PUBLIC;
+        $leaderboard->save();
+}
+if (is_array($leaderboard))
+	$leaderboard = $leaderboard[0];
+
+$leaderboard->last_updated = time();
+
 if (1 != (int)get_input("cron"))
     forward('mod/predictions/leaderboard.php');
 ?>

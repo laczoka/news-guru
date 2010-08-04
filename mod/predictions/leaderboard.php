@@ -13,6 +13,9 @@ $DAILY_AMOUNT = 20;
 $offset = get_input("offset", 0);
 $users_per_page  = 50;
 
+$leaderboard = elgg_get_entities(array('type' => 'object', 'subtype' => 'leaderboard'));
+$last_updated = $leaderboard && $leaderboard->getTimeUpdated() ? $leaderboard->last_updated : time();
+
 $users_query = array('type' => 'user', 
                      'limit' => $users_per_page,
                      'offset' => $offset, 
@@ -35,7 +38,7 @@ $nav = elgg_view('navigation/pagination',array(
 
 $body .= $nav;
 
-$body .= "<div style='width:100%;text-align:center'>Last updated ".friendly_time((int)(time() / 60*5) * 60*5)."</div>";
+$body .= "<div style='width:100%;text-align:center'>Last updated ".friendly_time($last_updated)."</div>";
 
 if ($page_viewer->isAdmin()) {
     $body .= '<div style="width:100%;text-align:center"><a href="'.elgg_add_action_tokens_to_url($CONFIG->wwwroot."action/predictions/update_leaderboard").'">Update NOW!</a></div>';
