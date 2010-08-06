@@ -9,7 +9,8 @@ $page_viewer = get_loggedin_user();
 
 
 $START_AMOUNT = 1000;
-$count_per_page = 10;
+// display all bets ( 0 -> no limit ) 
+$count_per_page = 0;
 $offset = get_input("offset", 0);
 
 $transaction_query = array('type' => 'object', 'subtype' => 'transaction', 

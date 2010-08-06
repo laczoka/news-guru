@@ -14,7 +14,7 @@ $offset = get_input("offset", 0);
 $users_per_page  = 50;
 
 $leaderboard = elgg_get_entities(array('type' => 'object', 'subtype' => 'leaderboard'));
-$last_updated = $leaderboard && $leaderboard->getTimeUpdated() ? $leaderboard->last_updated : time();
+$last_updated = $leaderboard && $leaderboard[0] && $leaderboard[0]->last_updated ? $leaderboard[0]->last_updated : time();
 
 $users_query = array('type' => 'user', 
                      'limit' => $users_per_page,
