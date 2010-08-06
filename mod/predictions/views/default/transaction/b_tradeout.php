@@ -1,5 +1,2 @@
-<form action="<?php echo $vars['url']; ?>action/predictions/tradeout" method="post">
-        <input type="hidden" name="transaction"  value="<?php echo $vars['transaction']->guid ?>" />
-        <?php echo elgg_view('input/securitytoken'); ?>
-        <input type="submit" value="Trade Out" />
-</form>
+<a href="<?php echo elgg_add_action_tokens_to_url($vars['url']."action/predictions/tradeout?transaction=".$vars['transaction_id']) ?>" 
+   class="a_button a_button_label">Tradeout</a>
