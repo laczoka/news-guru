@@ -5,22 +5,29 @@
 <?php $open_transactions = $vars['open_transactions']?>
 <?php $size = 100 ;?>
 <br />
-<div style="font-size: 16px; font-weight: bold">Free Cash Balance&nbsp&nbsp<span style="color: green">$<?php echo $user->opendollars ?></span></div>
+<div style="margin: 10px;font-size: 16px; font-weight: bold">Free Cash Balance&nbsp&nbsp<span style="color: green">$<?php echo $user->opendollars ?></span></div>
 <br />
 
-<table style="width:100%;">
-<thead style="padding-bottom:10px;">
-<tr>
-    <th><b>Market</b></th><th><b>Your choice</b></th><th><b>Trade time</b></th><th><b>Your<br />price</b></th><th><b>Current<br />value</b></th><th><b>If right<br />You win</b></th>
-    <th><b>If Wrong<br />You Lose</b></th><th><b>Actions</b></th>
+<table class="predictions_table">
+<thead>
+<tr class="odd">
+    <th scope="col" class="col_3_of_12">Market</th>
+    <th scope="col" class="col_2_of_12">Your choice</th>
+    <th scope="col" class="col_1_of_12">Trade time</th>
+    <th scope="col" class="col_1_of_12">Your price</th>
+    <th scope="col" class="col_1_of_12">Current value</th>
+    <th scope="col" class="col_1_of_12">If right You win</th>
+    <th scope="col" class="col_1_of_12">If wrong You lose</th>
+    <th scope="col" class="col_2_of_12_last">Actions</th>
 </tr>
 </thead>
 <tbody>
+<?php $rowcnt = 0 ;?>
 <?php foreach ($open_transactions as $tr): ?>
 <?php $market = get_entity($tr->market) ?>
 <?php $ev = $size * (1/$tr->price) ;?>
-<tr>
-    <td><a href="<?php echo $market->getURL()?>"><?php echo trim_text($market->title,15) ?></a></td>
+<tr <?php if ($rowcnt++ % 2) echo 'class="odd"' ?> >
+    <td><a href="<?php echo $market->getURL()?>"><?php echo trim_text($market->title,22) ?></a></td>
     <td><a href="<?php echo $tr->getURL()?>"><?php echo ($tr->option == 'option1') ? $market->option1 : $market->option2; ?></a></td>
     <td><?php echo str_replace(" ","<br />",date("d/M H:i:s",$tr->getTimeCreated())) ?></td>
     <td><?php echo round($tr->price * 100) ?>%</td>
