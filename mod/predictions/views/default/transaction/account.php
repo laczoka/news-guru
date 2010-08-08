@@ -51,6 +51,23 @@
 </tbody>
 </table>
 <script type="text/javascript">
+
+//add parser for +/-$[number] format 
+$.tablesorter.addParser({ 
+    // set a unique id 
+    id: 'opendollar', 
+    is: function(s) { 
+        // return false so this parser is not auto detected 
+        return false; 
+    }, 
+    format: function(s) { 
+        // format your data for normalization 
+        return s.replace("$","").replace("+",""); 
+    }, 
+    // set type, either numeric or text 
+    type: 'numeric' 
+});
+
 $(document).ready(function() 
 { 
     $("#myAccount").tablesorter({
@@ -59,7 +76,11 @@ $(document).ready(function()
         // enable handling of "zebra" rows
         widgets: ['zebra'],
         // disable sorting on "Actions" tab
-        headers: { 7: { sorter:false }}
+        // activate opendollar parser
+        headers: { 4 : { sorter: 'opendollar' },
+ 	               5 : { sorter: 'opendollar' },
+   	               6 : { sorter: 'opendollar' },
+                   7 : { sorter: false } }
                                             }); 
 }); 
 </script>
