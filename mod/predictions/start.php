@@ -20,6 +20,7 @@ function predictions_init() {
     
     elgg_extend_view('css', 'predictions/css');
     elgg_extend_view('metatags', 'predictions/js');
+    elgg_extend_view('elgg_topbar/extend', 'topbar');
     
 }
 
