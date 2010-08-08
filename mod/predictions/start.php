@@ -19,6 +19,8 @@ function predictions_init() {
     register_plugin_hook('cron', 'halfhour', 'predictions_update_leaderboard_cron');
     
     elgg_extend_view('css', 'predictions/css');
+    elgg_extend_view('metatags', 'predictions/js');
+    
 }
 
 function predictions_update_leaderboard_cron() {
