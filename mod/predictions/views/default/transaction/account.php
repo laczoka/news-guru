@@ -34,11 +34,12 @@
 <?php $rowcnt = 0 ;?>
 <?php foreach ($open_transactions as $tr): ?>
 <?php $market = get_entity($tr->market) ?>
-<?php $ev = $size * (1/$tr->price) ;?>
+<?php $ev = $size * (1/$tr->price); ?>
+<?php $trade_time = $tr->getTimeCreated(); ?>
 <tr <?php echo ($rowcnt++ % 2) ? 'class="odd"' : 'class="even"' ?> >
     <td><a href="<?php echo $market->getURL()?>"><?php echo trim_text($market->title,22) ?></a></td>
     <td><a href="<?php echo $tr->getURL()?>"><?php echo ($tr->option == 'option1') ? $market->option1 : $market->option2; ?></a></td>
-    <td><?php echo str_replace(" ","<br />",date("d/M H:i:s",$tr->getTimeCreated())) ?></td>
+    <td ts="<?php echo $trade_time ?>"><?php echo str_replace(" ","<br />",date("d/M H:i:s",$trade_time)) ?></td>
     <td><?php echo round($tr->price * 100) ?>%</td>
     <td>+$<?php echo round(two_options_current_bet_fair_value($tr, $market),0) ?></td>
     <td>+$<?php echo round($ev, 0) ?></td>
@@ -68,6 +69,21 @@ $.tablesorter.addParser({
     type: 'numeric' 
 });
 
+$.tablesorter.addParser({ 
+    // set a unique id 
+    id: 'attrib-ts', 
+    is: function(s) { 
+        // return false so this parser is not auto detected 
+        return false; 
+    }, 
+    format: function(s,table,cell) { 
+    	var ts = $(cell).attr("ts"); 
+        return ts ? ts : 0; 
+    }, 
+    // set type, either numeric or text 
+    type: 'numeric' 
+});
+
 $(document).ready(function() 
 { 
     $("#myAccount").tablesorter({
@@ -75,9 +91,11 @@ $(document).ready(function()
         sortList: [[2,1]],
         // enable handling of "zebra" rows
         widgets: ['zebra'],
+
         // disable sorting on "Actions" tab
         // activate opendollar parser
-        headers: { 4 : { sorter: 'opendollar' },
+        headers: { 2 : { sorter: 'attrib-ts' },
+                   4 : { sorter: 'opendollar' },
  	               5 : { sorter: 'opendollar' },
    	               6 : { sorter: 'opendollar' },
                    7 : { sorter: false } }
