@@ -1,7 +1,5 @@
 <?php
-// only logged in users can add predictions
-gatekeeper();
-
+require_once dirname(dirname(__FILE__)).'/lib/date_helper.php';
 // init
 $page_viewer = get_loggedin_user();
 $size = 100.0;
@@ -9,16 +7,18 @@ $status = 'open';
 $factor = 100.0;    // sensitivity factor
 
 // get the form input
-$m = get_entity(get_input('market'));
+$market = get_entity(get_input('market'));
 $price = get_input('price');
 $option = get_input('option');
 
-if ($page_viewer->guid != 2 && $m->guid != 1814) {
-    //system_message('Betting is not currently available.  It is expected to be turned on in the next week.');
-    //forward('mod/predictions/index.php');
+// check if the settlement deadline passed (expect UTC time)
+if ($market->suspend && ng_has_date_passed($market->suspend))
+{
+ 	$market->status = 'suspended';
+ 	$market->save();
 }
 
-if ($m->status != 'open') {
+if ($market->status != 'open') {
     system_message('Market is no longer open.');
     forward('mod/predictions/index.php');
 }
@@ -30,7 +30,7 @@ if ($page_viewer->opendollars < $size) {
     forward('mod/predictions/index.php');
 }
 
-if (empty($m)) {
+if (empty($market)) {
     register_error('No market found');
     forward('mod/predictions/index.php');
 }
@@ -38,31 +38,31 @@ if (empty($m)) {
 // create a new predictions object
 elgg_set_ignore_access(TRUE);
 
-$t = new ElggObject();
-$t->title = 'Transaction ' . $t->guid;
-$t->description = '$' . $size . ' wagered';
-$t->subtype = "transaction";
-$t->value1 = $m->value1;
-$t->value2 = $m->value2;
+$transaction = new ElggObject();
+$transaction->title = 'Transaction ' . $transaction->guid;
+$transaction->description = '$' . $size . ' wagered';
+$transaction->subtype = "transaction";
+$transaction->value1 = $market->value1;
+$transaction->value2 = $market->value2;
 // set values
-if (!empty($m)) {
-    $t->market = $m->guid;
+if (!empty($market)) {
+    $transaction->market = $market->guid;
 }
 if (!empty($option) ) {
-    $t->option = $option;
+    $transaction->option = $option;
 }
 if (!empty($size) ) {
-    $t->size = $size;
+    $transaction->size = $size;
 }
 if (!empty($status) ) {
-    $t->status = $status;
+    $transaction->status = $status;
 }
 
 // for now make all predictions public
-$t->access_id = ACCESS_PUBLIC;
+$transaction->access_id = ACCESS_PUBLIC;
 
 // owner is logged in user
-$t->owner_guid = get_loggedin_userid();
+$transaction->owner_guid = get_loggedin_userid();
 
 
 // adjust balance
@@ -70,31 +70,31 @@ $page_viewer->opendollars = round($page_viewer->opendollars - $size, 0);
 
 // Get the approximated market move
 if ($option == 'option1') {
-    $diff = (1.0 - $m->value1) / $factor; // one percent to home
+    $diff = (1.0 - $market->value1) / $factor; // one percent to home
 } else {
-    $diff = (1.0 - $m->value2) / $factor; // one percent to home
+    $diff = (1.0 - $market->value2) / $factor; // one percent to home
 }
 
 // Set transaction price as midpoint
 if ($option == 'option1') {
-    $t->price = $m->value1 + $diff/2.0;
+    $transaction->price = $market->value1 + $diff/2.0;
 } else {
-    $t->price = $m->value2 + $diff/2.0;
+    $transaction->price = $market->value2 + $diff/2.0;
 }
 
 // adjust market
 if ($option == 'option1') {
-    $m->value1 = $m->value1 +$diff;
-    $m->value2 = $m->value2 -$diff;
+    $market->value1 = $market->value1 +$diff;
+    $market->value2 = $market->value2 -$diff;
 } else {
-    $m->value1 = $m->value1 -$diff;
-    $m->value2 = $m->value2 +$diff;
+    $market->value1 = $market->value1 -$diff;
+    $market->value2 = $market->value2 +$diff;
 }
-$m->volume += $size;
+$market->volume += $size;
 
 // save to database
-$t->save();
-$m->save();
+$transaction->save();
+$market->save();
 
 // forward user 
 forward('mod/predictions/transactions.php');
