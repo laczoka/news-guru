@@ -30,6 +30,7 @@
 ?>
 <div class="contentWrapper">
 <form action="<?php echo $vars['url']; ?>action/vazco_topbar/edit" method="post">
+<?php echo elgg_view('input/securitytoken'); ?>
 <p>
     <?php echo elgg_echo('vazco_topbar:settings:homebutton'); ?>
     <select name="params[homebutton]">
