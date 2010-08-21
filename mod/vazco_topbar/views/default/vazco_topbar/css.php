@@ -190,3 +190,31 @@ background:white;
 margin:0 0 20px;
 padding:0 0 5px;
 }
+
+/* Custom fix layout */
+#elgg_topbar {
+    min-width:980px;
+}
+
+#elgg_topbar_container_left {
+    width:auto;
+}
+
+#elgg_topbar_container_right {
+    position:static;
+}
+
+#elgg_topbar_container_search {
+    height:21px;
+    margin:3px 6px 0 0;
+    position:static;
+    right:auto;
+}
+
+#elgg_topbar_container_left a.pagelinks {
+    margin:0 10px 0 5px;
+}
+
+#searchform input.search_input {
+    width:73%;
+}
