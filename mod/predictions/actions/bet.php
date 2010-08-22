@@ -11,8 +11,8 @@ $market = get_entity(get_input('market'));
 $price = get_input('price');
 $option = get_input('option');
 
-// check if the settlement deadline passed (expect UTC time)
-if ($market->suspend && ng_has_date_passed($market->suspend))
+// check if the suspension deadline passed (expect UTC time)
+if ($market->suspend_utc && ng_has_date_passed($market->suspend_utc))
 {
  	$market->status = 'suspended';
  	$market->save();

@@ -11,7 +11,10 @@ $value1 = get_input('value1');
 $option2 = get_input('option2');
 $value2 = get_input('value2');
 $settlement = get_input('settlement');
+// deprecated: remove $suspend in the future
 $suspend = get_input('suspend');
+$suspend_utc = get_input('suspend_utc');
+$suspend_utc = is_numeric($suspend_utc) ? $suspend_utc : strtotime($suspend_utc);
 $tags = string_to_tag_array(get_input('tags'));
 
 $add_market_input = array(
@@ -23,6 +26,7 @@ $add_market_input = array(
     'option2' => $option2,
     'value2' => $value2,
     'suspend' => $suspend,
+    'suspend_utc' => $suspend_utc,
     'settlement' => $settlement 
 );
 
@@ -32,6 +36,11 @@ $value1 = $value1 / 100.0;
 $value2 = $value2 / 100.0;
 
 // validation
+if ( isset($suspend_utc) && ($suspend_utc < time())) {
+    register_error('Market suspension date lies in the past');
+    forward('mod/predictions/add.php');
+}
+
 if (empty($value1) || empty($value2) || empty($option1) || empty($option2)
         ||empty($title) || empty($body) ) {
     register_error('Please fill in description, title, and at least 2 options');
@@ -42,7 +51,6 @@ if ( $value1 + $value2 != 1.0 ) {
     register_error('Percentages must add up to 100%');
     forward('mod/predictions/add.php');
 }
-
 
 // create a new object
 $prediction = new ElggObject();
@@ -71,7 +79,9 @@ if (!empty($option2) && !empty($value2)) {
     $prediction->value2 = $value2;
 }
 
+// deprecated: remove $suspend in the future
 $prediction->suspend = $suspend;
+$prediction->suspend_utc = $suspend_utc;
 
 $prediction->settlement = $settlement;
 

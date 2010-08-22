@@ -98,3 +98,6 @@ table.tablesorter thead tr .headerSortUp {
 table.tablesorter thead tr .headerSortDown {
     background-image: url("../mod/predictions/images/desc.gif");
 }
+
+<?php include dirname(dirname(dirname(dirname(__FILE__)))).'/css/anytimec.css' ?>
+
