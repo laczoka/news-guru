@@ -4,7 +4,6 @@ $DAILY_AMOUNT = 20;
 
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-//$body = list_entities('object','predictions',0,10,false);
 $e = elgg_get_entities (array('type' => 'object', 'subtype' => 'predictions', limit => 0,
     'offset' => 0, 'full_view' => FALSE));
 foreach ($e as $k => $p) {
@@ -13,6 +12,13 @@ foreach ($e as $k => $p) {
     }
 }
 $body = elgg_view_entity_list($e);
+
+// float_images_to_left to win some space
+$body .= 
+'<script type="text/javascript">
+   $("div.contentWrapper img").css("float","left").css("padding","4px 4px 4px 4px");
+</script>';
+
 
 // Get categories, if they're installed
 global $CONFIG;

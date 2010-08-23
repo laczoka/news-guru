@@ -14,7 +14,7 @@ $owner = get_entity($m->owner_guid);
 <div class="contentWrapper">
 
     <p><?php echo $vars['entity']->description; ?></p>
-
+    <p style="clear:both" />
     <?php
 
     echo '<table style="border-spacing: 10px;">';
