@@ -1,4 +1,5 @@
 <?php
+require_once dirname(dirname(__FILE__)).'/lib/date_helper.php';
 // only logged in users can add predictions
 elgg_set_ignore_access(TRUE);
 
