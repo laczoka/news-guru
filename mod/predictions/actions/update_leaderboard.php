@@ -94,6 +94,11 @@ while ($user_query['offset'] < $total_number_of_users) {
 	$users = elgg_get_entities( $user_query );
 	
 	foreach ($users as $user) {
+		// HACK: to fix a sporadic issue where "report_total_net_asset_value" becomes an array
+		// Possible cause: db race condition or some elgg bug, other than that unknown at this time
+        if (is_array($user->report_total_net_asset_value))
+          remove_metadata($user->guid, "report_total_net_asset_value"); 
+          
 		$user->report_total_net_asset_value 
 		 = isset($total_net_asset_value[$user->guid]) ? 
 		          $total_net_asset_value[$user->guid] 
