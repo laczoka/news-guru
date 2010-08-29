@@ -1,5 +1,5 @@
 <?php
-require_once dirname(dirname(__FILE__)).'/lib/date_helper.php';
+
 // init
 $page_viewer = get_loggedin_user();
 $size = 100.0;
