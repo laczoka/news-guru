@@ -12,10 +12,17 @@ $price = get_input('price');
 $option = get_input('option');
 
 // check if the suspension deadline passed (expect UTC time)
-if ($market->suspend_utc && ng_has_date_passed($market->suspend_utc))
+if (is_numeric($market->suspend_utc) && (((int)$market->suspend_utc) < time()))
 {
  	$market->status = 'suspended';
  	$market->save();
+ 	// this seems like a code duplication but it is not
+ 	// this makes sure the bet won't be placed after automatic suspension
+ 	// hfl13 reported an isssue 
+ 	// Bet http://news-guru.com/pg/view/22873 placed after
+ 	// http://news-guru.com/pg/view/22793 should have been suspended
+ 	system_message('Market is no longer open.');
+    forward('mod/predictions/index.php');
 }
 
 if ($market->status != 'open') {
