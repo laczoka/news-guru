@@ -1,8 +1,7 @@
 <?php
-
-gatekeeper();
+include dirname(dirname(__FILE__)).'/lib/lock.php';
+// init
 $page_viewer = get_loggedin_user();
-
 $START_AMOUNT = 1000;
 $DAILY_AMOUNT = 20;
 $size = 100.0;
@@ -11,6 +10,17 @@ elgg_set_ignore_access(TRUE);
 
 
 $m = get_entity(get_input('market'));
+if (empty($m)) {
+    register_error('No market found');
+    forward('mod/predictions/index.php');
+}
+
+$mutex = LOCK_RESOURCE($m->guid);
+if (NULL === $mutex) {
+    register_error("Couldn't acquire exclusive access to market");
+    forward('mod/predictions/index.php');
+}
+
 $option = get_input('option');
 
 $e = elgg_get_entities_from_metadata(array(
@@ -81,5 +91,6 @@ $left .= '<br/>' .  round(((+(3600*23) - time() + $page_viewer->lastdaily)/3600.
 $body = elgg_view_layout('two_column_left_sidebar', $left, $body);
 
 page_draw("Predictions",$body);
-
+// release lock on the market
+UNLOCK_RESOURCE($mutex);
 ?>

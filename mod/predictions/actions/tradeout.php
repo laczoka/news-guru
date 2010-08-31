@@ -1,5 +1,6 @@
 <?php
-// only logged in users can add predictions
+include dirname(dirname(__FILE__)).'/lib/lock.php';
+
 elgg_set_ignore_access(TRUE);
 
 // init
@@ -9,7 +10,18 @@ $factor = 100.0;    // sensitivity factor
 
 // get the form input
 $transaction = get_entity(get_input('transaction'));
+if (empty($transaction)) {
+	register_error("Specified transaction not found");
+    forward('mod/predictions/index.php');
+}
+
 $market = get_entity($transaction->market);
+$mutex = LOCK_RESOURCE($market->guid);
+if (NULL === $mutex) {
+    register_error("Couldn't acquire exclusive access to market");
+    forward('mod/predictions/index.php');
+}
+
 $option = $transaction->option;
 
 // check if the suspension deadline passed (expect UTC time)
@@ -17,6 +29,8 @@ if (is_numeric($market->suspend_utc) && (((int)$market->suspend_utc) < time()))
 {
     $market->status = 'suspended';
     $market->save();
+    // release lock on the market
+    UNLOCK_RESOURCE($mutex);
     // this seems like a code duplication but it is not
     // this makes sure the bet won't be placed after automatic suspension
     // hfl13 reported an isssue 
@@ -28,12 +42,16 @@ if (is_numeric($market->suspend_utc) && (((int)$market->suspend_utc) < time()))
 
 // vaidation
 if ($transaction->status == 'closed') {
+	// release lock on the market
+    UNLOCK_RESOURCE($mutex);
     register_error('This position is already closed');
     forward('mod/predictions/index.php');
 }
 
 // vaidation
 if ($market->status != 'open') {
+	// release lock on the market
+    UNLOCK_RESOURCE($mutex);
     register_error('This market is no longer open.');
     forward('mod/predictions/index.php');
 }
@@ -109,7 +127,8 @@ $transaction->settlementDate = time();
 $transaction->status = 'closed';
 
 $transaction->save();
-
+// release lock on the market
+UNLOCK_RESOURCE($mutex);
 // forward user to a page that displays the predictions
 forward('mod/predictions/transactions.php');
 ?>

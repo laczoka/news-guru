@@ -1,5 +1,5 @@
 <?php
-
+include dirname(dirname(__FILE__)).'/lib/lock.php';
 // init
 $page_viewer = get_loggedin_user();
 $size = 100.0;
@@ -8,6 +8,18 @@ $factor = 100.0;    // sensitivity factor
 
 // get the form input
 $market = get_entity(get_input('market'));
+if (empty($market)) {
+    register_error('No market found');
+    forward('mod/predictions/index.php');
+}
+
+// acquire lock on the market
+$mutex = LOCK_RESOURCE($market->guid);
+
+if (NULL === $mutex) {
+    register_error("Couldn't acquire exclusive access to market");
+    forward('mod/predictions/index.php');
+}
 $price = get_input('price');
 $option = get_input('option');
 
@@ -16,6 +28,9 @@ if (is_numeric($market->suspend_utc) && (((int)$market->suspend_utc) < time()))
 {
  	$market->status = 'suspended';
  	$market->save();
+ 	
+ 	UNLOCK_RESOURCE($mutex);
+ 	
  	// this seems like a code duplication but it is not
  	// this makes sure the bet won't be placed after automatic suspension
  	// hfl13 reported an isssue 
@@ -26,19 +41,18 @@ if (is_numeric($market->suspend_utc) && (((int)$market->suspend_utc) < time()))
 }
 
 if ($market->status != 'open') {
-    system_message('Market is no longer open.');
+	
+	UNLOCK_RESOURCE($mutex);
+	system_message('Market is no longer open.');
     forward('mod/predictions/index.php');
 }
 
 
 // validation
 if ($page_viewer->opendollars < $size) {
-    register_error('$100 is currently required to bet on this market');
-    forward('mod/predictions/index.php');
-}
-
-if (empty($market)) {
-    register_error('No market found');
+	
+    UNLOCK_RESOURCE($mutex);
+	register_error('$100 is currently required to bet on this market');
     forward('mod/predictions/index.php');
 }
 
@@ -102,7 +116,8 @@ $market->volume += $size;
 // save to database
 $transaction->save();
 $market->save();
-
+// release lock on the market
+UNLOCK_RESOURCE($mutex);
 // forward user 
 forward('mod/predictions/transactions.php');
 ?>
