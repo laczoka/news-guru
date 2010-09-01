@@ -31,6 +31,8 @@ $e = elgg_get_entities_from_metadata(array(
         "metadata_name_value_pairs" => array( "name" => "market", "value" => $m->guid) )
      );
 
+$report_content = array();
+
 $body = 'Market = ' . $m->guid . '<br/><br/>';
 foreach ($e as $t) {
     if ($m->guid == $t-> market) {
@@ -42,10 +44,9 @@ foreach ($e as $t) {
             $return = $t->status == 'open' ? 0.0 : 0.0;
         }
 
-        $body .=  ++$j . '. owner : ' . $t->owner_guid . ' ' . round($t->price,4) . ' size: $' . $t->size  . ' status: '
+        /*$body .=  ++$j . '. owner : ' . $t->owner_guid . ' ' . round($t->price,4) . ' size: $' . $t->size  . ' status: '
                 . $t->status . ' market: ' . $t->market . ' option ' . $t->option 
-                . ' settled ' . $t->settlementPrice . ' return ' . round($return) . '<br/><br/> ';
-
+                . ' settled ' . $t->settlementPrice . ' return ' . round($return) . '<br/><br/> ';*/
         if ($t->status == 'open') {
             if ($option == $t->option) {
                 $owner->opendollars += round($return);
@@ -56,11 +57,35 @@ foreach ($e as $t) {
             }
             $t->settlementDate = time();
             $t->status = 'settled';
+            
+            $option_name = ($t->option == 'option1') ? $m->option1 : $m->option2;
+            $report_content[] = array( option_name => $option_name, 
+                                        tr_url => $t->getURL(), 
+                                    owner_name => $owner->username, 
+                                     owner_url => $owner->getURL(), 
+                                    tr_created => $t->getTimeCreated(),
+                                         price => $t->price,
+                                           win => $return );
+        
         }
     }
 }
 $m->status = 'settled';
+$m->outcome = $option == "option1" ? $m->option1 : $m->option2;
+$report = new ElggObject();
+$report->title = "Settlement report";
+$report->subtype = "settlement_report";
+$report->access_id = ACCESS_LOGGED_IN;
+$report->market = $m->guid;
+$report->report = serialize($report_content);
 
+/*$report = new ElggSettlementReport();
+$report->report = serialize($report_content); */
+
+$report->save();
+UNLOCK_RESOURCE($mutex);
+$body .= $report->getURL();
+forward($report->getURL());
 
 //unset($page_viewer->opendollars);
 //unset($page_viewer->lastdaily);

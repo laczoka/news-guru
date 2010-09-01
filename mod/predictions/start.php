@@ -1,6 +1,8 @@
 <?php
 global $CONFIG;
 
+//include($CONFIG->pluginspath . "predictions/entities/PredictionsSettlementReport.php");
+
 function predictions_init() {
 
     // Load system configuration
