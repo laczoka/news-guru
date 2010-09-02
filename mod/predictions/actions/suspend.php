@@ -22,8 +22,9 @@ if ($page_viewer->guid != $p->owner_guid && !$page_viewer->isAdmin()) {
     forward('mod/predictions/index.php');
 }
 
-// set the title
+// set state and time of suspension
 $p->status = 'suspended';
+$p->suspended_utc = time();
 $p->save();
 // release lock on the market
 UNLOCK_RESOURCE($mutex);

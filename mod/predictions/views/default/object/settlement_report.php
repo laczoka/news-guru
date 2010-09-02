@@ -11,6 +11,11 @@
     <tr>
         <td style="font-weight: bold">Market&nbsp&nbsp</td><td ><a href="<?php $market->getURL() ?>"><?php echo $market->title ?></a></td>
     </tr>
+    <?php if (isset($market->suspended_utc)): /* legacy markets may not have this attribute */?>
+    <tr>
+        <td style="font-weight: bold">Trade suspended</td><td><?php echo date("d/M/Y H:i:s",$market->suspended_utc) ?></td>
+    </tr>
+    <?php endif; ?>
     <tr>
         <td style="font-weight: bold">Settled &nbsp&nbsp</td><td><?php echo date("d/M/Y H:i:s",$settlement_report->getTimeCreated()) ?></td>
     </tr>

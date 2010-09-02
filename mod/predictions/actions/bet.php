@@ -27,6 +27,7 @@ $option = get_input('option');
 if (is_numeric($market->suspend_utc) && (((int)$market->suspend_utc) < time()))
 {
  	$market->status = 'suspended';
+ 	$market->suspended_utc = time();
  	$market->save();
  	
  	UNLOCK_RESOURCE($mutex);
