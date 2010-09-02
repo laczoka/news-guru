@@ -58,9 +58,15 @@ color: black;
     width : 24%;
 }
 
-.predictions_table {
+.predictions_table, two_column_table {
         border-collapse:collapse;
         width:100%;
+}
+.two_column_table td {
+		text-align:left;
+        font-size:12px;
+        font-family:"Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+        padding: 0px 0px 5px;		
 }
 .predictions_table td {
         text-align:center;
