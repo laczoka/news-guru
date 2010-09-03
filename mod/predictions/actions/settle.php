@@ -62,9 +62,9 @@ foreach ($e as $t) {
             // accumulate total return for market creator
             if ($t->owner_guid == $m->owner_guid) {
             	$report_market_creator_total_return += $return - $size;
-            } else
-            // accumulate total return for market creator
-            if ($t->owner_guid == $page_viewer->owner_guid) {
+            }
+            // accumulate total return for settlement officer
+            if ($t->owner_guid == $page_viewer->guid) {
             	$report_settlement_officer_total_return += $return - $size;
             }
         }
@@ -104,5 +104,4 @@ add_to_river('river/object/predictions/settle','settle',$page_viewer->guid,$repo
 
 UNLOCK_RESOURCE($mutex);
 forward($report->getURL());
-
 ?>

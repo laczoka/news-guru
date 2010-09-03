@@ -25,7 +25,7 @@
     <tr>
         <td style="font-weight: bold">Created by</td>
         <td><a href="<?php echo $market_creator->getURL() ?>"><?php echo $market_creator->name ?></a>&nbsp
-        	(<?php echo isset($market_creator_return) ? ($market_creator_return >= 0.0 ? "Won $".$market_creator_return : "Lost $".$market_creator_return) : "had no stakes" ?>)
+        	(<?php echo isset($market_creator_return) ? ($market_creator_return >= 0.0 ? "Won $".$market_creator_return : "Lost $".abs($market_creator_return)) : "had no stakes" ?>)
         </td>
     </tr>
     <tr>
@@ -45,7 +45,7 @@
     <tr>
         <td style="font-weight: bold">Settled by</td>
         <td><a href="<?php echo $market_settled_by->getURL() ?>"><?php echo $market_settled_by->name ?></a>&nbsp
-        (<?php echo isset($settlement_officer_return) ? ($settlement_officer_return >= 0.0 ? "Won $".$settlement_officer_return : "Lost $".$settlement_officer_return) : "had no stakes" ?>)
+        (<?php echo isset($settlement_officer_return) ? ($settlement_officer_return >= 0.0 ? "Won $".$settlement_officer_return : "Lost $".abs($settlement_officer_return)) : "had no stakes" ?>)
         </td>
     </tr>
     <tr>
@@ -55,7 +55,7 @@
         <td><?php echo $market->option1 ?></td><td style="font-weight:bold"><?php echo round($market->value1*100, 0) ?>%</td>
     </tr>
     <tr>
-        <td><?php echo $market->option2 ?> </td><td style="font-weight:bold"> <?php echo round($market->value2*100, 0) ?>%</td>
+        <td><?php echo $market->option2 ?> </td><td style="font-weight:bold"> <?php echo round(($market->value2-0.0000001)*100, 0) ?>%</td>
     </tr>
     </tbody>
 </table>
