@@ -87,6 +87,11 @@ color: black;
 .predictions_table .odd {
         background:none repeat scroll 0 0 #E8EDFF;
 }
+/* river feed items */
+
+.river_object_settlement_report_settle {
+    background: url("../mod/predictions/images/dollar.png") no-repeat left -1px;
+}
 
 /* Table sorter */
 
