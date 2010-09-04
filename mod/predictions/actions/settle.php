@@ -93,6 +93,7 @@ $report->subtype = "settlement_report";
 $report->access_id = ACCESS_LOGGED_IN;
 $report->market = $m->guid;
 $report->report = serialize($report_content);
+$report->tags = array("settlement");
 
 /*$report = new ElggSettlementReport();
 $report->report = serialize($report_content); */
