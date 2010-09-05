@@ -86,7 +86,10 @@
     <td><a href="<?php echo $win['tr_url'] ?>"><?php echo $win['option_name'] ?></a></td>
     <td ts="<?php echo $win['tr_created'] ?>"><?php echo str_replace(" ","<br />",date("d/M H:i:s",$win['tr_created'])) ?></td>
     <td><?php echo round($win['price'] * 100) ?>% &nbsp<?php echo "($".$win['stake'].")" ?></td>
-    <td><?php echo ($win['win'] >= 0.0 ? "+$": "-$").abs($win['win']) ?></td> 
+    <td><?php echo ($win['win'] >= 0.0 ? "+$": "-$").abs($win['win']) ?>
+        <?php  if (!empty($win['tr_closed'])): ?>
+            <br /><small>(sold <?php echo date("d/M H:i:s",$win['tr_closed']) ?>)</small></td>
+        <?php endif; ?> 
 </tr>
 <?php endforeach; ?>
 </tbody>

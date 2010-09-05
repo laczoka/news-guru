@@ -82,6 +82,10 @@ color: black;
 .predictions_table .odd {
         background:none repeat scroll 0 0 #E8EDFF;
 }
+.predictions_table td small {
+        font-size: 0.8em;
+        font-style:italic;
+}
 
 /* additional styling for yui grids based layout */
 .boldc div {

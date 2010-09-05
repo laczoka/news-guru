@@ -35,22 +35,33 @@ $e = elgg_get_entities_from_metadata(array(
 $report_transactions = array();
 
 foreach ($e as $t) {
-    if ($m->guid == $t-> market) {
+    if ($m->guid == $t->market) {
         $owner = get_entity($t->owner_guid);
-        $ev = $size * (1/$t->price) ;
-        if ($option == $t->option) {
-            $return = $t->status == 'open' ? round($ev) : 0.0;
-        } else {
-            $return = $t->status == 'open' ? 0.0 : 0.0;
+        
+        $option_name = ($t->option == 'option1') ? $m->option1 : $m->option2;
+            
+        // handle tradeout bets need to be included into the report but the do not change user balance
+        if ($t->status == 'closed') {
+            $return = $t->settlementPrice;
+            $report_transactions[] = array( option_name => $option_name, 
+                                        tr_url => $t->getURL(), 
+                                    owner_name => $owner->name, 
+                                     owner_url => $owner->getURL(), 
+                                    tr_created => $t->getTimeCreated(),
+                                     tr_closed => $t->settlementDate,
+                                         price => $t->price,
+                                         stake => $t->size,
+                                           win => $t->settlementPrice - $size );
         }
-
+        // handle open bets
         if ($t->status == 'open') {
+            $ev = $size * (1/$t->price) ;
+            $return = ($option == $t->option) ? round($ev) : 0.0;
             $owner->opendollars += round($return);
             $t->settlementPrice = round($return);
             $t->settlementDate = time();
             $t->status = 'settled';
             
-            $option_name = ($t->option == 'option1') ? $m->option1 : $m->option2;
             $report_transactions[] = array( option_name => $option_name, 
                                         tr_url => $t->getURL(), 
                                     owner_name => $owner->name, 
@@ -59,14 +70,14 @@ foreach ($e as $t) {
                                          price => $t->price,
                                          stake => $size,
                                            win => $return - $size );
-            // accumulate total return for market creator
-            if ($t->owner_guid == $m->owner_guid) {
-            	$report_market_creator_total_return += $return - $size;
-            }
-            // accumulate total return for settlement officer
-            if ($t->owner_guid == $page_viewer->guid) {
-            	$report_settlement_officer_total_return += $return - $size;
-            }
+        }
+        // accumulate total return for market creator
+        if ($t->owner_guid == $m->owner_guid) {
+            $report_market_creator_total_return += $return - $size;
+        }
+        // accumulate total return for settlement officer
+        if ($t->owner_guid == $page_viewer->guid) {
+            $report_settlement_officer_total_return += $return - $size;
         }
     }
 }
