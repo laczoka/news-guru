@@ -58,16 +58,11 @@ color: black;
     width : 24%;
 }
 
-.predictions_table, two_column_table {
+.predictions_table {
         border-collapse:collapse;
         width:100%;
 }
-.two_column_table td {
-		text-align:left;
-        font-size:12px;
-        font-family:"Lucida Sans Unicode","Lucida Grande",Sans-Serif;
-        padding: 0px 0px 5px;		
-}
+
 .predictions_table td {
         text-align:center;
         font-size:12px;
@@ -87,6 +82,15 @@ color: black;
 .predictions_table .odd {
         background:none repeat scroll 0 0 #E8EDFF;
 }
+
+/* additional styling for yui grids based layout */
+.boldc div {
+        font-weight:bold;
+}
+.pad04em div {
+        padding: 0 0.4em 0.4em;
+}
+
 /* river feed items */
 
 .river_object_settlement_report_settle {
@@ -111,4 +115,5 @@ table.tablesorter thead tr .headerSortDown {
 }
 
 <?php include dirname(dirname(dirname(dirname(__FILE__)))).'/css/anytimec.css' ?>
+<?php include dirname(dirname(dirname(dirname(__FILE__)))).'/css/grids-customized.css' ?>
 

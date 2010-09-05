@@ -11,56 +11,64 @@
 <?php echo elgg_view_title('<a href="' . $settlement_report->getURL() . '">'
         . $settlement_report->title . '</a>'); ?>
 <div class="contentWrapper">
-<table class="two_column_table" style="margin: 10px;font-size: 16px;">
-    <thead>
-    	<tr>
-    		<th scope="col" style="width:30%" ></th>
-    		<th scope="col" style="width:70%" ></th>
-    	</tr>
-   	</thead>
-    <tbody>
-    <tr>
-        <td style="font-weight: bold">Market &nbsp&nbsp</td><td ><a href="<?php $market->getURL() ?>"><?php echo $market->title ?></a></td>
-    </tr>
-    <tr>
-        <td style="font-weight: bold">Created by</td>
-        <td><a href="<?php echo $market_creator->getURL() ?>"><?php echo $market_creator->name ?></a>&nbsp
-        	(<?php echo isset($market_creator_return) ? ($market_creator_return >= 0.0 ? "Won $".$market_creator_return : "Lost $".abs($market_creator_return)) : "had no stakes" ?>)
-        </td>
-    </tr>
-    <tr>
-        <td style="font-weight: bold">Created&nbsp&nbsp</td><td><?php echo date("d/M/Y H:i:s",$market->getTimeCreated()) ?></td>
-    </tr>
-    <?php if (isset($market->suspended_utc)): /* legacy markets may not have this attribute */?>
-    <tr>
-        <td style="font-weight: bold">Trading suspended&nbsp</td><td><?php echo date("d/M/Y H:i:s",$market->suspended_utc) ?></td>
-    </tr>
-    <?php endif; ?>
-    <tr>
-        <td style="font-weight: bold">Settled &nbsp&nbsp</td><td><?php echo date("d/M/Y H:i:s",$settlement_report->getTimeCreated()) ?></td>
-    </tr>
-    <tr>
-        <td style="font-weight: bold">Outcome &nbsp&nbsp</td><td><?php echo $market->outcome ?></td>
-    </tr>
-    <tr>
-        <td style="font-weight: bold">Settled by</td>
-        <td><a href="<?php echo $market_settled_by->getURL() ?>"><?php echo $market_settled_by->name ?></a>&nbsp
-        (<?php echo isset($settlement_officer_return) ? ($settlement_officer_return >= 0.0 ? "Won $".$settlement_officer_return : "Lost $".abs($settlement_officer_return)) : "had no stakes" ?>)
-        </td>
-    </tr>
-    <tr>
-        <td style="font-weight: bold; border-bottom: dashed 1px; padding-top:1em; " colspan="2">Public belief at settlement</td>
-    </tr>
-    <tr>
-        <td><?php echo $market->option1 ?></td><td style="font-weight:bold"><?php echo round($market->value1*100, 0) ?>%</td>
-    </tr>
-    <tr>
-        <td><?php echo $market->option2 ?> </td><td style="font-weight:bold"> <?php echo round(($market->value2-0.0000001)*100, 0) ?>%</td>
-    </tr>
-    </tbody>
-</table>
-<br />
-<table id="settlementReport" class="predictions_table tablesorter">
+<div class="yui-b">
+    <div class="yui-gf">
+        <div class="yui-u first boldc pad04em"><div>Market</div></div>
+        <div class="yui-u pad04em"><div><a href="<?php $market->getURL() ?>"><?php echo $market->title ?></a></div></div>        
+    </div>
+</div>
+<div class="yui-b" style="margin-top: 0.8em">
+    <div class="yui-g">
+        <div class="yui-g first">
+            <div class="yui-u first boldc pad04em">
+                <div>Created by</div>
+                <div>Created</div>
+            </div>
+            <div class="yui-u pad04em">
+                    <div><a href="<?php echo $market_creator->getURL() ?>"><?php echo $market_creator->name ?></a>&nbsp
+                        (<?php echo isset($market_creator_return) ? ($market_creator_return >= 0.0 ? "Won $".$market_creator_return : "Lost $".abs($market_creator_return)) : "had no stakes" ?>)</div>
+                    <div><?php echo date("d/M/Y H:i:s",$market->getTimeCreated()) ?></div>
+            </div>        
+        </div>    
+        <div class="yui-g">
+            <div class="yui-u first boldc pad04em">
+                <div>Settled by</div>
+                <div>Settled</div>
+            </div>
+            <div class="yui-u pad04em">
+                <div><a href="<?php echo $market_settled_by->getURL() ?>"><?php echo $market_settled_by->name ?></a>&nbsp
+                    (<?php echo isset($settlement_officer_return) ? ($settlement_officer_return >= 0.0 ? "Won $".$settlement_officer_return : "Lost $".abs($settlement_officer_return)) : "had no stakes" ?>)</div>
+                <div><?php echo date("d/M/Y H:i:s",$settlement_report->getTimeCreated()) ?></div>
+            </div>        
+        </div>    
+    </div>    
+</div>
+<div class="yui-b" style="margin-top: 0.8em">
+    <div class="yui-gf">
+        <div class="yui-u first boldc pad04em">
+            <div>Trading suspended</div>
+            <div>Outcome</div>
+        </div>
+        <div class="yui-u pad04em">
+            <div><?php echo date("d/M/Y H:i:s",$market->suspended_utc) ?></div>
+            <div><?php echo $market->outcome ?></div>
+        </div>                
+    </div>
+</div>
+<div style="font-weight: bold; border-bottom: dashed 1px; padding-top:1em; clear:both">Public belief at settlement</div>
+<div class="yui-b" style="margin-top: 0.8em">
+    <div class="yui-gf">
+        <div class="yui-u first boldc pad04em">
+            <div><?php echo $market->option1 ?></div>
+            <div><?php echo $market->option2 ?></div>
+        </div>
+        <div class="yui-u pad04em">
+            <div><?php echo round($market->value1*100, 0) ?>%</div>
+            <div><?php echo round(($market->value2-0.0000001)*100, 0) ?>%</div>
+        </div>                
+    </div>
+</div>
+<table id="settlementReport" class="predictions_table tablesorter" style="margin-top: 0.8em">
 <thead>
 <tr class="odd">
     <th scope="col" class="col_2_of_12">Owner</th>
@@ -125,8 +133,8 @@ $(document).ready(function()
         // enable handling of "zebra" rows
         widgets: ['zebra'],
 
-        // disable sorting on "Actions" tab
         // activate opendollar parser
+        // activate parser for "ts" attribute
         headers: { 2 : { sorter: 'attrib-ts' },
                    4 : { sorter: 'opendollar' }
                                             }}); 
