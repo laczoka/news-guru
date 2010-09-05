@@ -87,16 +87,10 @@ $m->outcome = $option == "option1" ? $m->option1 : $m->option2;
 $m->settled_by = $page_viewer->guid;
 $m->status = 'settled';
 
-$report = new ElggObject();
-$report->title = "Settlement report";
-$report->subtype = "settlement_report";
-$report->access_id = ACCESS_LOGGED_IN;
-$report->market = $m->guid;
-$report->report = serialize($report_content);
-$report->tags = array("settlement");
-
-/*$report = new ElggSettlementReport();
-$report->report = serialize($report_content); */
+$report = PredictionsSettlementReport::create(
+    $m->guid,
+    $report_content
+);
 
 $report->save();
 

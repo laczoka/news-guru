@@ -11,28 +11,48 @@ class PredictionsSettlementReport extends ElggObject
  
         public function __construct($guid = null) {
             parent::__construct($guid);
-            // HACK
-            $this->title = "Settlement report";
-            $this->report = 
-            array(array( option_name => 'Yes', tr_url => ' ', owner_name => ' ', owner_url => ' ', tr_created => 1283286938, price => 0.45, win => 100 ));
         }
         
+        /*
+         * Report is stored as a serialized nested php array
+         */
         public function get($name) {
         	if ("report" == $name) {
-        	    $serialized_arr = parent::get($name);
-        	    return unserialize($serialized_arr);
+        	    $arr = unserialize(parent::get($name));
+        	    return $arr;
         	}
         	else
                 return parent::get($name);
         }
+        
+        public function set($name, $value) {
+        	if (("report" == $name) && is_array($value)) {
+        		$value = serialize($value);
+        	} 
+        	
+        	parent::set($name, $value);      
+        }
+        
+        
+        public static function create($market_guid, $report_content) {
+        	$report = new PredictionsSettlementReport();
+        	$report->title = "Settlement report";
+        	$report->access_id = ACCESS_LOGGED_IN;
+        	$report->tags = array("settlement");
+        	
+            $report->market = $market_guid;
+            $report->report = $report_content;
+
+            return $report;
+        }
 }
  
-function committee_init() {
+function settlementreport_init() {
    register_entity_type('object', PredictionsSettlementReport::SUBTYPE );
    // This operation only affects the db on the first call for this subtype
    // If you change the class name, you'll have to hand-edit the db
    add_subtype('object', PredictionsSettlementReport::SUBTYPE, 'PredictionsSettlementReport');
 }
  
-register_elgg_event_handler('init', 'system', 'committee_init');
+register_elgg_event_handler('init', 'system', 'settlementreport_init');
 ?>

@@ -1,7 +1,7 @@
 <?php
 global $CONFIG;
 
-//include($CONFIG->pluginspath . "predictions/entities/PredictionsSettlementReport.php");
+include_once($CONFIG->pluginspath . "predictions/entities/PredictionsSettlementReport.php");
 
 function predictions_init() {
 

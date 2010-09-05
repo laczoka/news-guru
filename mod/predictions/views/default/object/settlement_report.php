@@ -1,6 +1,6 @@
 <?php $settlement_report = $vars['entity'];
-      // this is a HACK should return deserialized stuff immediatelly
-      $report_content = unserialize($vars['entity']->report);
+      $report_content = $settlement_report->report;
+      
       $market_creator_return = $report_content['market_creator_total_return'];
       $settlement_officer_return = $report_content['settlement_officer_total_return'];
       $report_transactions = $report_content['transactions']; 
