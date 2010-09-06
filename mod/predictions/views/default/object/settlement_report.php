@@ -14,7 +14,7 @@
 <div class="yui-b">
     <div class="yui-gf">
         <div class="yui-u first boldc pad04em"><div>Market</div></div>
-        <div class="yui-u pad04em"><div><a href="<?php $market->getURL() ?>"><?php echo $market->title ?></a></div></div>        
+        <div class="yui-u pad04em"><div><a href="<?php echo $market->getURL() ?>"><?php echo $market->title ?></a></div></div>        
     </div>
 </div>
 <div class="yui-b" style="margin-top: 0.8em">
