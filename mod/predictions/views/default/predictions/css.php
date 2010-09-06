@@ -100,6 +100,9 @@ color: black;
 .river_object_settlement_report_settle {
     background: url("../mod/predictions/images/dollar.png") no-repeat left -1px;
 }
+.river_object_predictions_create {
+    background: url("../mod/predictions/images/add_16.png") no-repeat left -1px;
+}
 
 /* Table sorter */
 

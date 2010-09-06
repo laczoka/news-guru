@@ -1,6 +1,4 @@
 <?php
-// only logged in users can add predictions
-gatekeeper();
 elgg_set_ignore_access(TRUE);
 
 // get the form input
@@ -89,6 +87,9 @@ $prediction->status = 'open';
 
 // save to database
 $prediction->save();
+
+// send update to the river
+add_to_river('river/object/predictions/create','create',$prediction->owner_guid,$prediction->guid);
 
 unset($_SESSION['predictions/add_market']);
 
