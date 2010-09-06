@@ -4,20 +4,24 @@ $DAILY_AMOUNT = 20;
 
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-$e = elgg_get_entities_from_metadata(array(
+$markets_per_page = 10;
+$offset = get_input('offset', 0);
+$market_query = array(
         'type'                  => "object",
         'subtype'               => "predictions",
-        'limit'                 =>  0,
-        'offset'                =>  0,
+        'limit'                 =>  $markets_per_page,
+        'offset'                =>  $offset,
         'full_view'             => FALSE,
         'metadata_name_value_pairs_operator'=>  'OR',
         "metadata_name_value_pairs" => array(
                                         array(name => 'status', value => 'open'),
                                         array(name => 'status', value => 'suspended'))
-                                           )
-     );
+                                           );
 
-$body = elgg_view_entity_list($e);
+$markets = elgg_get_entities_from_metadata($market_query);
+$no_of_markets = elgg_get_entities_from_metadata(array_merge($market_query, array(count => TRUE)));
+
+$body = elgg_view_entity_list($markets, $no_of_markets, $offset, 10, false, false, true );
 
 // float_images_to_left to win some space
 $body .= 
