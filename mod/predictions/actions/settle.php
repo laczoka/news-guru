@@ -67,6 +67,7 @@ foreach ($e as $t) {
                                     owner_name => $owner->name, 
                                      owner_url => $owner->getURL(), 
                                     tr_created => $t->getTimeCreated(),
+                                    tr_closed => NULL,
                                          price => $t->price,
                                          stake => $size,
                                            win => $return - $size );
