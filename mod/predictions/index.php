@@ -4,13 +4,19 @@ $DAILY_AMOUNT = 20;
 
 include_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-$e = elgg_get_entities (array('type' => 'object', 'subtype' => 'predictions', limit => 0,
-    'offset' => 0, 'full_view' => FALSE));
-foreach ($e as $k => $p) {
-    if ($p->status != 'open'  && $p->status != 'suspended') {
-        unset ($e[$k]);
-    }
-}
+$e = elgg_get_entities_from_metadata(array(
+        'type'                  => "object",
+        'subtype'               => "predictions",
+        'limit'                 =>  0,
+        'offset'                =>  0,
+        'full_view'             => FALSE,
+        'metadata_name_value_pairs_operator'=>  'OR',
+        "metadata_name_value_pairs" => array(
+                                        array(name => 'status', value => 'open'),
+                                        array(name => 'status', value => 'suspended'))
+                                           )
+     );
+
 $body = elgg_view_entity_list($e);
 
 // float_images_to_left to win some space
