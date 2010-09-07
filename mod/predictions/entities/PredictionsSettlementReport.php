@@ -18,8 +18,16 @@ class PredictionsSettlementReport extends ElggObject
          */
         public function get($name) {
         	if ("report" == $name) {
-        	    $arr = unserialize(parent::get($name));
-        	    return $arr;
+        		$report = unserialize(parent::get($name));
+        		$i = 1;
+        		while ($ser_tr_chunk = parent::get($name.$i)) {
+        			$i=$i+1;
+        			$tr_chunk = unserialize($ser_tr_chunk);
+        			if (is_array($tr_chunk)) {
+        				$report['transactions'] = array_merge($report['transactions'],$tr_chunk);
+        			}
+        		}
+        	    return $report;
         	}
         	else
                 return parent::get($name);
@@ -27,7 +35,16 @@ class PredictionsSettlementReport extends ElggObject
         
         public function set($name, $value) {
         	if (("report" == $name) && is_array($value)) {
-        		$value = serialize($value);
+        		
+        		$full_report = $value;
+        		$transactions = $full_report['transactions'];
+        		$tr_chunks = array_chunk($transactions, 50);
+        		$full_report['transactions'] = $tr_chunks[0];
+        		$value = serialize($full_report);
+        		foreach ($tr_chunks as $i => $tr_chunk) {
+        			if ($i == 0) continue;
+        			parent::set($name.$i, serialize($tr_chunk));
+        		}
         	} 
         	
         	parent::set($name, $value);      
