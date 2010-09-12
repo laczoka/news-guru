@@ -94,7 +94,9 @@
 			trigger_elgg_event('profileupdate',$user->type,$user);
 
 			//add to river
-			add_to_river('river/user/default/profileupdate','update',$_SESSION['user']->guid,$_SESSION['user']->guid,get_default_access($_SESSION['user']));
+			// NEWS GURU CHANGE
+			// Only show profile update notification to admins and friends
+			add_to_river('river/user/default/profileupdate','update',$_SESSION['user']->guid,$_SESSION['user']->guid,/*get_default_access($_SESSION['user'])*/ACCESS_FRIENDS);
 
 			system_message(elgg_echo("profile:saved"));
 
